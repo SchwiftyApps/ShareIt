@@ -303,11 +303,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedCameraLeftButton(button: UIButton) {
-        print("Left Tapped")
+        // Haptic feedback
+        let feedback = UISelectionFeedbackGenerator()
+        feedback.selectionChanged()
+        
+        // Go to the info view (information about the app and the services)
+        let controller = InfoViewController()
+        self.show(controller, sender: self)
     }
     
     @objc func tappedCameraRightButton(button: UIButton) {
-        print("Right Tapped")
+        // Haptic feedback
+        let feedback = UISelectionFeedbackGenerator()
+        feedback.selectionChanged()
+        
+        // TO DO: Functionality for this button
     }
     
     @objc func tappedCameraButton(button: UIButton) {
