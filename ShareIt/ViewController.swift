@@ -70,7 +70,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
-        // TO DO: Add long press gesture for the camera button for additional actions
+        // Configure camera long-hold gesture for extra actions
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGestureRecognizer.minimumPressDuration = 0.4
+        self.cameraButton.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if (gestureRecognizer.state == .began) {
+            // Gesture state when long-hold began
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                self.cameraButton.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
+            })
+        } else if (gestureRecognizer.state == .ended) {
+            // Gesture state when long-hold ended
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            })
+        }
+        
+        //TO DO: Add functionality for when the camera button is long-pressed
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
