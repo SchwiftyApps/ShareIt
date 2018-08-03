@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ShareIt
 //
-//  Created by Shibab Mehboob on 30/07/2018.
+//  Created by Andrew Lees, David Dunn, Kye Maloy, and Shihab Mehboob on 30/07/2018.
 //  Copyright © 2018 IBM. All rights reserved.
 //
 
