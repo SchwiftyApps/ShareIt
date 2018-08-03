@@ -13,6 +13,7 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    var cameraButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        self.createCameraButton()
+    }
+    
+    func createCameraButton() {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        let cameraButtonWidth = 60
+        
+        // Create the main camera button and add it to the view
+        self.cameraButton.frame = CGRect(x: Int(screenWidth/2) - Int(cameraButtonWidth/2), y: Int(screenHeight) - Int(cameraButtonWidth) - 30, width: cameraButtonWidth, height: cameraButtonWidth)
+        self.cameraButton.backgroundColor = Colours.grey
+        self.cameraButton.layer.cornerRadius = CGFloat(cameraButtonWidth/2)
+        self.cameraButton.layer.borderColor = Colours.white.cgColor
+        self.cameraButton.layer.borderWidth = 4
+        self.sceneView.addSubview(self.cameraButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
