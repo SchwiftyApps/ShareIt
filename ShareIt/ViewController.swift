@@ -19,6 +19,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var cameraRightButton = UIButton()
     var drawerView = UIView()
     var overlayView = UIButton()
+    var upIndicator = UIImageView()
     var collectionView: UICollectionView!
     var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
@@ -88,6 +89,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 self.cameraLeftButton.alpha = 1
                 self.cameraRightButton.alpha = 1
                 self.overlayView.alpha = 1
+                self.upIndicator.alpha = 0
             })
         }
     }
@@ -125,6 +127,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.backgroundColor = Colours.grey.withAlphaComponent(0.5)
                     self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
                     self.overlayView.alpha = 1
+                    self.upIndicator.alpha = 0
                 })
             } else {
                 // Close drawer
@@ -136,50 +139,60 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.backgroundColor = Colours.offWhite
                     self.cameraButton.layer.borderColor = Colours.white.cgColor
                     self.overlayView.alpha = 0
+                    self.upIndicator.alpha = 0.65
                 })
             }
         }
     }
     
     func createCameraButton() {
+        // TO DO: Consider replacing the icons below with better quality icons
+        
         // Define sizes
         let screenWidth = self.view.bounds.width
         let screenHeight = self.view.bounds.height
         let cameraButtonWidth = 60
         
         // Create camera background for when the camera button is long-pressed
-        self.cameraBackground.frame = CGRect(x: Int(screenWidth/2) - Int(146), y: Int(screenHeight) - Int(cameraButtonWidth) - 42, width: 292, height: 84)
+        self.cameraBackground.frame = CGRect(x: Int(screenWidth/2) - Int(146), y: Int(screenHeight) - Int(cameraButtonWidth) - 62, width: 292, height: 84)
         self.cameraBackground.backgroundColor = Colours.grey.withAlphaComponent(0.8)
         self.cameraBackground.layer.cornerRadius = CGFloat(42)
         self.cameraBackground.alpha = 0
         self.sceneView.addSubview(self.cameraBackground)
         
         // Create camera left button for when the camera button is long-pressed
-        self.cameraLeftButton.frame = CGRect(x: Int(screenWidth/2) - Int(136), y: Int(screenHeight) - Int(cameraButtonWidth) - 32, width: 64, height: 64)
+        self.cameraLeftButton.frame = CGRect(x: Int(screenWidth/2) - Int(120), y: Int(screenHeight) - Int(cameraButtonWidth) - 40, width: 40, height: 40)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 0
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-        //TO DO - image for button once image has been made: self.cameraLeftButton.setImage(UIImage(named: ""), for: .normal)
+        self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
-        self.cameraRightButton.frame = CGRect(x: Int(screenWidth/2) + Int(68), y: Int(screenHeight) - Int(cameraButtonWidth) - 32, width: 64, height: 64)
+        self.cameraRightButton.frame = CGRect(x: Int(screenWidth/2) + Int(78), y: Int(screenHeight) - Int(cameraButtonWidth) - 40, width: 40, height: 40)
         self.cameraRightButton.backgroundColor = Colours.clear
         self.cameraRightButton.layer.cornerRadius = CGFloat(32)
         self.cameraRightButton.alpha = 0
         self.cameraRightButton.addTarget(self, action: #selector(self.tappedCameraRightButton), for: .touchUpInside)
-        //TO DO - image for button once image has been made: self.cameraRightButton.setImage(UIImage(named: ""), for: .normal)
+        self.cameraRightButton.setImage(UIImage(named: "right"), for: .normal)
         self.sceneView.addSubview(self.cameraRightButton)
         
         // Create the main camera button and add it to the view
-        self.cameraButton.frame = CGRect(x: Int(screenWidth/2) - Int(cameraButtonWidth/2), y: Int(screenHeight) - Int(cameraButtonWidth) - 30, width: cameraButtonWidth, height: cameraButtonWidth)
+        self.cameraButton.frame = CGRect(x: Int(screenWidth/2) - Int(cameraButtonWidth/2), y: Int(screenHeight) - Int(cameraButtonWidth) - 50, width: cameraButtonWidth, height: cameraButtonWidth)
         self.cameraButton.backgroundColor = Colours.offWhite
         self.cameraButton.layer.cornerRadius = CGFloat(cameraButtonWidth/2)
         self.cameraButton.layer.borderColor = Colours.white.cgColor
         self.cameraButton.layer.borderWidth = 4
         self.cameraButton.addTarget(self, action: #selector(self.tappedCameraButton), for: .touchUpInside)
         self.sceneView.addSubview(self.cameraButton)
+        
+        // Create the swipe up prompt indicator
+        self.upIndicator.frame = CGRect(x: Int(screenWidth/2) - Int(20), y: Int(screenHeight) - Int(40), width: 40, height: 37)
+        self.upIndicator.backgroundColor = Colours.clear
+        self.upIndicator.alpha = 0.65
+        self.upIndicator.image = UIImage(named: "upArrow")
+        self.sceneView.addSubview(self.upIndicator)
     }
     
     func createDrawer() {
@@ -267,6 +280,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
             self.overlayView.alpha = 0
+            self.upIndicator.alpha = 0.65
         })
         
         // Dismiss camera background
