@@ -57,10 +57,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func configureGestures() {
         // Configure pan gesture
-        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        gestureRecognizer.minimumNumberOfTouches = 1
-        gestureRecognizer.delegate = self
-        self.sceneView.addGestureRecognizer(gestureRecognizer)
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        panGestureRecognizer.minimumNumberOfTouches = 1
+        panGestureRecognizer.delegate = self
+        self.sceneView.addGestureRecognizer(panGestureRecognizer)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -167,12 +167,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedText(button: UIButton) {
-        // Text button tap action
-        print(button.titleLabel?.text)
+        // Haptic feedback
+        let feedback = UISelectionFeedbackGenerator()
+        feedback.selectionChanged()
+        
+        // Store text from the tapped button
+        let textTapped = button.titleLabel?.text ?? "Hello"
+        print(textTapped)
     }
     
     @objc func tappedCameraButton(button: UIButton) {
-        // Camera button tap action
+        // Haptic feedback
+        let feedback = UISelectionFeedbackGenerator()
+        feedback.selectionChanged()
     }
     
     override func viewWillAppear(_ animated: Bool) {
