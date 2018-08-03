@@ -23,6 +23,8 @@ class InfoViewController: UIViewController {
         self.dismissButton.frame = CGRect(x: 20, y: 20, width: 40, height: 40)
         self.dismissButton.backgroundColor = Colours.offWhite
         self.dismissButton.layer.cornerRadius = CGFloat(20)
+        self.dismissButton.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        self.dismissButton.setImage(UIImage(named: "cross"), for: .normal)
         self.dismissButton.addTarget(self, action: #selector(self.dismissView), for: .touchUpInside)
         self.view.addSubview(self.dismissButton)
     }

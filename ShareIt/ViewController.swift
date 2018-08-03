@@ -277,6 +277,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedDismissOverlay(button: UIButton) {
+        // Handle any button related functionality here
+        self.tapDismiss()
+    }
+    
+    func tapDismiss() {
         // Define sizes
         let screenWidth = self.view.bounds.width
         let screenHeight = self.view.bounds.height
@@ -308,6 +313,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         feedback.selectionChanged()
         
         // Go to the info view (information about the app and the services)
+        self.tapDismiss()
         let controller = InfoViewController()
         self.show(controller, sender: self)
     }
