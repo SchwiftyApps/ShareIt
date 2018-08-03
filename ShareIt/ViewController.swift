@@ -10,13 +10,13 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
 
     var sceneView = ARSCNView()
     var cameraButton = UIButton()
     var drawerView = UIView()
     var collectionView: UICollectionView!
-    var textArray: [String] = ["Hello", "Hey", "Hi", "Oi Oi"]
+    var textArray: [String] = ["Hello", "Hey", "Hi", "Bonjour", "Hola"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +59,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Configure pan gesture
         let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         gestureRecognizer.minimumNumberOfTouches = 1
+        gestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
     @objc func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
@@ -67,15 +72,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let screenWidth = self.view.bounds.width
         let screenHeight = self.view.bounds.height
         
-        let velocity = gestureRecognizer.velocity(in: sceneView)
+        let velocity = gestureRecognizer.velocity(in: self.view)
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             // Gesture state whilst in the process of panning
-            let translation = gestureRecognizer.translation(in: self.sceneView)
+            let translation = gestureRecognizer.translation(in: self.view)
             gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: gestureRecognizer.view!.center.y + translation.y)
-            gestureRecognizer.setTranslation(CGPoint.zero, in: self.sceneView)
+            gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
             
             // Move drawer with pan gesture
             self.drawerView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenWidth), height: Int(screenHeight))
+            self.collectionView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenWidth), height: 120)
         } else if gestureRecognizer.state == .ended {
             // Gesture state when the pan process has ended
             // Animates smoothly to the desired end position
@@ -85,12 +91,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
                     self.drawerView.frame.origin.y = CGFloat(screenHeight)
+                    self.collectionView.frame.origin.y = CGFloat(screenHeight - 120)
                 })
             } else {
                 // Close drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
                     self.drawerView.frame.origin.y = CGFloat(screenHeight)
+                    self.collectionView.frame.origin.y = CGFloat(screenHeight)
                 })
             }
         }
@@ -104,7 +112,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Create the main camera button and add it to the view
         self.cameraButton.frame = CGRect(x: Int(screenWidth/2) - Int(cameraButtonWidth/2), y: Int(screenHeight) - Int(cameraButtonWidth) - 30, width: cameraButtonWidth, height: cameraButtonWidth)
-        self.cameraButton.backgroundColor = Colours.grey
+        self.cameraButton.backgroundColor = Colours.offWhite
         self.cameraButton.layer.cornerRadius = CGFloat(cameraButtonWidth/2)
         self.cameraButton.layer.borderColor = Colours.white.cgColor
         self.cameraButton.layer.borderWidth = 4
@@ -127,16 +135,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         layout.sectionInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         layout.itemSize = CGSize(width: 120, height: 60)
         layout.scrollDirection = .horizontal
-        self.collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 120), collectionViewLayout: layout)
+        self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(screenHeight), width: Int(screenWidth), height: 120), collectionViewLayout: layout)
         self.collectionView.contentSize = CGSize(width: screenWidth * 5, height: 120)
         self.collectionView.isScrollEnabled = true
+        self.collectionView.isPagingEnabled = true
         self.collectionView.backgroundColor = Colours.clear
         self.collectionView.showsHorizontalScrollIndicator = false
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.collectionView.register(TextCell.self, forCellWithReuseIdentifier: "Cell")
-        self.drawerView.addSubview(self.collectionView)
+        self.view.addSubview(self.collectionView)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -153,7 +162,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         cell.text.layer.cornerRadius = 10
         cell.text.titleLabel?.textAlignment = .center
         cell.text.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
+        cell.text.addTarget(self, action: #selector(self.tappedText), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func tappedText(button: UIButton) {
+        // Text button tap action
+        print(button.titleLabel?.text)
     }
     
     @objc func tappedCameraButton(button: UIButton) {
