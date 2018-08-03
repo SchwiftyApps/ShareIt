@@ -16,7 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var cameraButton = UIButton()
     var drawerView = UIView()
     var collectionView: UICollectionView!
-    var textArray: [String] = ["Hello", "Hey", "Hi", "Bonjour", "Hola"]
+    var textArray: [String] = ["Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,6 +92,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
                     self.drawerView.frame.origin.y = CGFloat(screenHeight)
                     self.collectionView.frame.origin.y = CGFloat(screenHeight - 120)
+                    self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+                    self.cameraButton.backgroundColor = Colours.grey.withAlphaComponent(0.5)
+                    self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
                 })
             } else {
                 // Close drawer
@@ -99,6 +102,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
                     self.drawerView.frame.origin.y = CGFloat(screenHeight)
                     self.collectionView.frame.origin.y = CGFloat(screenHeight)
+                    self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    self.cameraButton.backgroundColor = Colours.offWhite
+                    self.cameraButton.layer.borderColor = Colours.white.cgColor
                 })
             }
         }
@@ -138,7 +144,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(screenHeight), width: Int(screenWidth), height: 120), collectionViewLayout: layout)
         self.collectionView.contentSize = CGSize(width: screenWidth * 5, height: 120)
         self.collectionView.isScrollEnabled = true
-        self.collectionView.isPagingEnabled = true
         self.collectionView.backgroundColor = Colours.clear
         self.collectionView.showsHorizontalScrollIndicator = false
         self.collectionView.showsVerticalScrollIndicator = false
@@ -167,6 +172,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedText(button: UIButton) {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
         // Haptic feedback
         let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
@@ -174,6 +183,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Store text from the tapped button
         let textTapped = button.titleLabel?.text ?? "Hello"
         print(textTapped)
+        
+        // Close drawer when text is tapped
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+            self.drawerView.frame.origin.y = CGFloat(screenHeight)
+            self.collectionView.frame.origin.y = CGFloat(screenHeight)
+            self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            self.cameraButton.backgroundColor = Colours.offWhite
+            self.cameraButton.layer.borderColor = Colours.white.cgColor
+        })
     }
     
     @objc func tappedCameraButton(button: UIButton) {
