@@ -15,8 +15,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var sceneView = ARSCNView()
     var cameraButton = UIButton()
     var drawerView = UIView()
+    var overlayView = UIButton()
     var collectionView: UICollectionView!
-    var textArray: [String] = ["Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla"]
+    var textArray: [String] = ["Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Set up the scene view's frame
         sceneView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        
+        // Set up the overlay view
+        overlayView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
+        overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
+        overlayView.alpha = 0
         
         // Set the session's delegate
         sceneView.session.delegate = self
@@ -49,6 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Add the scene to the view
         self.view.addSubview(sceneView)
+        self.view.addSubview(overlayView)
         
         self.configureGestures()
         self.createCameraButton()
@@ -95,6 +103,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
                     self.cameraButton.backgroundColor = Colours.grey.withAlphaComponent(0.5)
                     self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
+                    self.overlayView.alpha = 1
                 })
             } else {
                 // Close drawer
@@ -105,6 +114,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
                     self.cameraButton.backgroundColor = Colours.offWhite
                     self.cameraButton.layer.borderColor = Colours.white.cgColor
+                    self.overlayView.alpha = 0
                 })
             }
         }
@@ -192,6 +202,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
+        })
+    }
+    
+    @objc func tappedDismissOverlay(button: UIButton) {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
+        // Close drawer
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+            self.drawerView.frame.origin.y = CGFloat(screenHeight)
+            self.collectionView.frame.origin.y = CGFloat(screenHeight)
+            self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            self.cameraButton.backgroundColor = Colours.offWhite
+            self.cameraButton.layer.borderColor = Colours.white.cgColor
+            self.overlayView.alpha = 0
         })
     }
     
