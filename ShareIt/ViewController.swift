@@ -29,12 +29,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Set up the scene view's frame
         sceneView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
         
-        // Set up the overlay view
-        overlayView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
-        overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
-        overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
-        overlayView.alpha = 0
-        
         // Set the session's delegate
         sceneView.session.delegate = self
         
@@ -54,12 +48,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Set the scene to the view
         sceneView.scene = scene
         
+        // Set up the overlay view
+        overlayView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
+        overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
+        overlayView.alpha = 0
+        
         // Add the scene to the view
         self.view.addSubview(sceneView)
         self.view.addSubview(overlayView)
         
-        self.configureGestures()
         self.createCameraButton()
+        self.configureGestures()
         self.createDrawer()
     }
     
@@ -69,6 +69,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
+        
+        // TO DO: Add long press gesture for the camera button for additional actions
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -203,6 +205,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
         })
+        
+        // TO DO: Add selected text to the AR view
     }
     
     @objc func tappedDismissOverlay(button: UIButton) {
@@ -226,6 +230,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
+        
+        // TO DO: Functionality for this button
     }
     
     override func viewWillAppear(_ animated: Bool) {
