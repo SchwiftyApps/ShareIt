@@ -10,11 +10,13 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     var sceneView = ARSCNView()
     var cameraButton = UIButton()
     var drawerView = UIView()
+    var collectionView: UICollectionView!
+    var textArray: [String] = ["Hello", "Hey", "Hi", "Oi Oi"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,6 +121,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         self.drawerView.frame = CGRect(x: 0, y: Int(screenHeight), width: Int(screenWidth), height: Int(screenHeight))
         self.drawerView.backgroundColor = Colours.grey
         self.sceneView.addSubview(self.drawerView)
+        
+        // Create scrollable collectionView for the drawer content
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+        layout.itemSize = CGSize(width: 120, height: 60)
+        layout.scrollDirection = .horizontal
+        self.collectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 120), collectionViewLayout: layout)
+        self.collectionView.contentSize = CGSize(width: screenWidth * 5, height: 120)
+        self.collectionView.isScrollEnabled = true
+        self.collectionView.backgroundColor = Colours.clear
+        self.collectionView.showsHorizontalScrollIndicator = false
+        self.collectionView.showsVerticalScrollIndicator = false
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.register(TextCell.self, forCellWithReuseIdentifier: "Cell")
+        self.drawerView.addSubview(self.collectionView)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // Number of items in the drawer
+        return textArray.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // Create the cells for the collectionView and populate it with data from the array
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TextCell
+        cell.text.setTitle(self.textArray[indexPath.row], for: .normal)
+        cell.text.setTitleColor(Colours.white, for: .normal)
+        cell.text.backgroundColor = Colours.greyLight
+        cell.text.layer.cornerRadius = 10
+        cell.text.titleLabel?.textAlignment = .center
+        cell.text.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
+        return cell
     }
     
     @objc func tappedCameraButton(button: UIButton) {
