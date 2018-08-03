@@ -23,6 +23,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var collectionView: UICollectionView!
     var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
+    override var prefersStatusBarHidden: Bool {
+        // Status bar should ideally be hidden in an AR experience
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -83,6 +88,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == .began) {
             // Gesture state when long-hold began
+            // Double haptic feedback
+            let feedback = UISelectionFeedbackGenerator()
+            feedback.selectionChanged()
+            feedback.selectionChanged()
+            
             UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                 self.cameraButton.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
                 self.cameraBackground.alpha = 1
