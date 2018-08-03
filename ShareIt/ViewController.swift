@@ -14,6 +14,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
     var sceneView = ARSCNView()
     var cameraButton = UIButton()
+    var drawerView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         
         self.configureGestures()
         self.createCameraButton()
+        self.createDrawer()
     }
     
     func configureGestures() {
@@ -59,12 +61,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     }
     
     @objc func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
         let velocity = gestureRecognizer.velocity(in: sceneView)
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             // Gesture state whilst in the process of panning
             let translation = gestureRecognizer.translation(in: self.sceneView)
             gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: gestureRecognizer.view!.center.y + translation.y)
             gestureRecognizer.setTranslation(CGPoint.zero, in: self.sceneView)
+            
+            // Move drawer with pan gesture
+            self.drawerView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenWidth), height: Int(screenHeight))
         } else if gestureRecognizer.state == .ended {
             // Gesture state when the pan process has ended
             // Animates smoothly to the desired end position
@@ -73,11 +82,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                 // Open drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
+                    self.drawerView.frame.origin.y = CGFloat(screenHeight)
                 })
             } else {
                 // Close drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
+                    self.drawerView.frame.origin.y = CGFloat(screenHeight)
                 })
             }
         }
@@ -97,6 +108,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         self.cameraButton.layer.borderWidth = 4
         self.cameraButton.addTarget(self, action: #selector(self.tappedCameraButton), for: .touchUpInside)
         self.sceneView.addSubview(self.cameraButton)
+    }
+    
+    func createDrawer() {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
+        // Create the drawer and add it to the view just off the screen on the y axis
+        self.drawerView.frame = CGRect(x: 0, y: Int(screenHeight), width: Int(screenWidth), height: Int(screenHeight))
+        self.drawerView.backgroundColor = Colours.grey
+        self.sceneView.addSubview(self.drawerView)
     }
     
     @objc func tappedCameraButton(button: UIButton) {
