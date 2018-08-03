@@ -42,6 +42,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        let velocity = gestureRecognizer.velocity(in: sceneView)
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             // Gesture state whilst in the process of panning
             let translation = gestureRecognizer.translation(in: self.sceneView)
@@ -50,9 +51,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         } else if gestureRecognizer.state == .ended {
             // Gesture state when the pan process has ended
             // Animates smoothly to the desired end position
-            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
-            })
+            // Check whether the swipe is up or down
+            if velocity.y < 0 {
+                // Open drawer
+                UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                    gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
+                })
+            } else {
+                // Close drawer
+                UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                    gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
+                })
+            }
         }
     }
     
