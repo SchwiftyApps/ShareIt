@@ -30,7 +30,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         
+        self.configureGestures()
         self.createCameraButton()
+    }
+    
+    func configureGestures() {
+        // Configure pan gesture
+        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        gestureRecognizer.minimumNumberOfTouches = 1
+        self.sceneView.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    @objc func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+            // Gesture state whilst in the process of panning
+            let translation = gestureRecognizer.translation(in: self.sceneView)
+            gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: gestureRecognizer.view!.center.y + translation.y)
+            gestureRecognizer.setTranslation(CGPoint.zero, in: self.sceneView)
+        } else if gestureRecognizer.state == .ended {
+            // Gesture state when the pan process has ended
+            // Animates smoothly to the desired end position
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
+            })
+        }
     }
     
     func createCameraButton() {
@@ -45,7 +68,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.cameraButton.layer.cornerRadius = CGFloat(cameraButtonWidth/2)
         self.cameraButton.layer.borderColor = Colours.white.cgColor
         self.cameraButton.layer.borderWidth = 4
+        self.cameraButton.addTarget(self, action: #selector(self.tappedCameraButton), for: .touchUpInside)
         self.sceneView.addSubview(self.cameraButton)
+    }
+    
+    @objc func tappedCameraButton(button: UIButton) {
+        // Camera button tap action
     }
     
     override func viewWillAppear(_ animated: Bool) {
