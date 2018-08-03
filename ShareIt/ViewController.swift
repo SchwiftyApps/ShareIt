@@ -10,25 +10,42 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
-    @IBOutlet var sceneView: ARSCNView!
+    var sceneView = ARSCNView()
     var cameraButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
+        // Set up the scene view's frame
+        sceneView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        
+        // Set the session's delegate
+        sceneView.session.delegate = self
+        
+        // Set automatic lighting for the scene
+        sceneView.automaticallyUpdatesLighting = true
+        sceneView.autoenablesDefaultLighting = true
+        
         // Set the view's delegate
         sceneView.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = false
         
         // Create a new scene
         let scene = SCNScene(named: "art.scnassets/ship.scn")!
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        // Add the scene to the view
+        self.view.addSubview(sceneView)
         
         self.configureGestures()
         self.createCameraButton()
