@@ -323,7 +323,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
-        // TO DO: Functionality for this button
+        // Go to the kitura view (server related view for data storage and retrieval)
+        self.tapDismiss()
+        let controller = KituraViewController()
+        self.show(controller, sender: self)
     }
     
     @objc func tappedCameraButton(button: UIButton) {
