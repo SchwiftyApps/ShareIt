@@ -14,10 +14,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     var sceneView = ARSCNView()
     var cameraButton = UIButton()
+    var cameraBackground = UIView()
+    var cameraLeftButton = UIButton()
+    var cameraRightButton = UIButton()
     var drawerView = UIView()
     var overlayView = UIButton()
     var collectionView: UICollectionView!
-    var textArray: [String] = ["Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
+    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +52,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         sceneView.scene = scene
         
         // Set up the overlay view
-        overlayView.frame = CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight)
+        overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenWidth), height: Int(screenHeight) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
         overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
         overlayView.alpha = 0
@@ -81,15 +84,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             // Gesture state when long-hold began
             UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                 self.cameraButton.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)
-            })
-        } else if (gestureRecognizer.state == .ended) {
-            // Gesture state when long-hold ended
-            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-                self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+                self.cameraBackground.alpha = 1
+                self.cameraLeftButton.alpha = 1
+                self.cameraRightButton.alpha = 1
+                self.overlayView.alpha = 1
             })
         }
-        
-        //TO DO: Add functionality for when the camera button is long-pressed
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -146,6 +146,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let screenWidth = self.view.bounds.width
         let screenHeight = self.view.bounds.height
         let cameraButtonWidth = 60
+        
+        // Create camera background for when the camera button is long-pressed
+        self.cameraBackground.frame = CGRect(x: Int(screenWidth/2) - Int(146), y: Int(screenHeight) - Int(cameraButtonWidth) - 42, width: 292, height: 84)
+        self.cameraBackground.backgroundColor = Colours.grey.withAlphaComponent(0.8)
+        self.cameraBackground.layer.cornerRadius = CGFloat(42)
+        self.cameraBackground.alpha = 0
+        self.sceneView.addSubview(self.cameraBackground)
+        
+        // Create camera left button for when the camera button is long-pressed
+        self.cameraLeftButton.frame = CGRect(x: Int(screenWidth/2) - Int(136), y: Int(screenHeight) - Int(cameraButtonWidth) - 32, width: 64, height: 64)
+        self.cameraLeftButton.backgroundColor = Colours.clear
+        self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
+        self.cameraLeftButton.alpha = 0
+        self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
+        //TO DO - image for button once image has been made: self.cameraLeftButton.setImage(UIImage(named: ""), for: .normal)
+        self.sceneView.addSubview(self.cameraLeftButton)
+        
+        // Create camera right button for when the camera button is long-pressed
+        self.cameraRightButton.frame = CGRect(x: Int(screenWidth/2) + Int(68), y: Int(screenHeight) - Int(cameraButtonWidth) - 32, width: 64, height: 64)
+        self.cameraRightButton.backgroundColor = Colours.clear
+        self.cameraRightButton.layer.cornerRadius = CGFloat(32)
+        self.cameraRightButton.alpha = 0
+        self.cameraRightButton.addTarget(self, action: #selector(self.tappedCameraRightButton), for: .touchUpInside)
+        //TO DO - image for button once image has been made: self.cameraRightButton.setImage(UIImage(named: ""), for: .normal)
+        self.sceneView.addSubview(self.cameraRightButton)
         
         // Create the main camera button and add it to the view
         self.cameraButton.frame = CGRect(x: Int(screenWidth/2) - Int(cameraButtonWidth/2), y: Int(screenHeight) - Int(cameraButtonWidth) - 30, width: cameraButtonWidth, height: cameraButtonWidth)
@@ -243,6 +268,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.layer.borderColor = Colours.white.cgColor
             self.overlayView.alpha = 0
         })
+        
+        // Dismiss camera background
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            self.cameraBackground.alpha = 0
+            self.cameraLeftButton.alpha = 0
+            self.cameraRightButton.alpha = 0
+        })
+    }
+    
+    @objc func tappedCameraLeftButton(button: UIButton) {
+        print("Left Tapped")
+    }
+    
+    @objc func tappedCameraRightButton(button: UIButton) {
+        print("Right Tapped")
     }
     
     @objc func tappedCameraButton(button: UIButton) {
