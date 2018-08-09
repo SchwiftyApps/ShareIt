@@ -11,8 +11,13 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
-
+    
+    // ARKit variables
+    var textNode = SCNNode()
+    var planes = [ARPlaneAnchor: Plane]()
     var sceneView = ARSCNView()
+    
+    // UI variables
     var cameraButton = UIButton()
     var cameraBackground = UIView()
     var cameraLeftButton = UIButton()
@@ -21,7 +26,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var overlayView = UIButton()
     var upIndicator = UIImageView()
     var collectionView: UICollectionView!
-    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
+    let feedback = UISelectionFeedbackGenerator()
+    let feedbackSuccess = UINotificationFeedbackGenerator()
+    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hëllo", "Hêy", "Hī", "Høla", "Hęllo", "Hėy", "Hì", "Hœla"]
     
     public struct screenSize {
         static var width: CGFloat = UIViewController().view.bounds.width
@@ -89,9 +96,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == .began) {
             // Gesture state when long-hold began
-            // Double haptic feedback
-            let feedback = UISelectionFeedbackGenerator()
-            feedback.selectionChanged()
             feedback.selectionChanged()
             
             UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -267,7 +271,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     @objc func tappedCameraLeftButton(button: UIButton) {
         // Haptic feedback
-        let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
         // Go to the info view (information about the app and the services)
@@ -278,7 +281,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     @objc func tappedCameraRightButton(button: UIButton) {
         // Haptic feedback
-        let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
         // Send off placed objects to the Kitura server
@@ -303,8 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
             banner.alpha = 1
-            let feedback = UINotificationFeedbackGenerator()
-            feedback.notificationOccurred(.success)
+            self.feedbackSuccess.notificationOccurred(.success)
         })
         
         UIView.animate(withDuration: 0.5, delay: 2, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -314,7 +315,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     @objc func tappedCameraButton(button: UIButton) {
         // Haptic feedback
-        let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
         // Place the floating AR object in the view
@@ -325,12 +325,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     @objc func tappedText(button: UIButton) {
         // Haptic feedback
-        let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
         // Store text from the tapped button
         let textTapped = button.titleLabel?.text ?? "Hello"
-        print(textTapped)
         
         // Close drawer when text is tapped
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -371,9 +369,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Release any cached data, images, etc that aren't in use.
     }
     
-    var textNode = SCNNode()
-    var planes = [ARPlaneAnchor: Plane]()
-    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         DispatchQueue.main.async {
             // Add a plane to the view if an anchor point exists
@@ -385,7 +380,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         DispatchQueue.main.async {
-            // Update the plane when something changes in the view
+            // Update the plane when something changes in the view, which ensures that node points are always current
             if let planeAnchor = anchor as? ARPlaneAnchor {
                 self.updatePlane(anchor: planeAnchor)
             }
@@ -413,9 +408,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         text.font = UIFont.systemFont(ofSize: 1.0)
         // Flatness is smoothness of curves and edges (a smaller flatness value looks better, but at the cost of performance)
         text.flatness = 0.008
+        
+        // TO DO: Add colour picker option for the text model, maybe when it's tapped
         text.firstMaterial?.diffuse.contents = UIColor.white
         
         // Add the model to the scene
+        // TO DO: Add pinch gesture and adjust scale value to scale text before dropping in the view
         let textNode = SCNNode(geometry: text)
         let fontSize = Float(0.04)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
@@ -429,7 +427,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     func placeGreetingText(parentNode: SCNNode) {
-        // Binds a text model to a parent node
+        // Binds a text model to a parent node, dropping it in the AR scene
         textNode.position = SCNVector3Zero
         parentNode.addChildNode(textNode)
     }
