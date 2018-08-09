@@ -420,6 +420,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let fontSize = Float(0.04)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
         
+        // Set a bounding box to the text model, and place it to the centre of the x and z axis, and to the bottom of the y axis to prevent it floating
+        var minVector = SCNVector3Zero
+        var maxVector = SCNVector3Zero
+        (minVector, maxVector) = textNode.boundingBox
+        textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, minVector.z + (maxVector.z - minVector.z)/2)
         return textNode
     }
     
