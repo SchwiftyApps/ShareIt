@@ -172,7 +172,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 0
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-        self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
+        self.cameraLeftButton.setImage(UIImage(named: "cross"), for: .normal)
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
@@ -273,10 +273,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedback.selectionChanged()
         
-        // Go to the info view (information about the app and the services)
+        // Remove all nodes and models from the AR scene
         self.tapDismiss()
-        let controller = InfoViewController()
-        self.show(controller, sender: self)
+        self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
+        
+        // Display alert showing that the AR objects have been deleted
+        self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
     
     @objc func tappedCameraRightButton(button: UIButton) {
