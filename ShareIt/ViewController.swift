@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var textNode = SCNNode()
     var planes = [ARPlaneAnchor: Plane]()
     var sceneView = ARSCNView()
+    var directionLight = SCNLight()
     
     // UI variables
     var cameraButton = UIButton()
@@ -65,6 +66,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
         overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
         overlayView.alpha = 0
+        
+        // Add light for shadowsdirectionalLight.castsShadow = true
+        directionLight.shadowMode = .deferred
+        directionLight.shadowColor = UIColor.black.withAlphaComponent(0.6)
+        directionLight.shadowRadius = 5.0
         
         // Add the scene to the view
         self.view.addSubview(sceneView)
@@ -416,6 +422,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let textNode = SCNNode(geometry: text)
         let fontSize = Float(0.04)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
+        
+        // Allow the text node to cast a shadow
+        textNode.castsShadow = true
         
         // Set a bounding box to the text model, and place it to the centre of the x and z axis, and to the bottom of the y axis to prevent it floating
         var minVector = SCNVector3Zero
