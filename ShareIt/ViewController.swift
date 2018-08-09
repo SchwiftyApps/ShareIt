@@ -238,28 +238,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         return cell
     }
     
-    @objc func tappedText(button: UIButton) {
-        // Haptic feedback
-        let feedback = UISelectionFeedbackGenerator()
-        feedback.selectionChanged()
-        
-        // Store text from the tapped button
-        let textTapped = button.titleLabel?.text ?? "Hello"
-        print(textTapped)
-        
-        // Close drawer when text is tapped
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
-            self.drawerView.frame.origin.y = CGFloat(screenSize.height)
-            self.collectionView.frame.origin.y = CGFloat(screenSize.height)
-            self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
-            self.cameraButton.backgroundColor = Colours.offWhite
-            self.cameraButton.layer.borderColor = Colours.white.cgColor
-        })
-        
-        // TO DO: Add selected text to the AR view
-    }
-    
     @objc func tappedDismissOverlay(button: UIButton) {
         // Handle any button related functionality here
         self.tapDismiss()
@@ -339,7 +317,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
-        // TO DO: Functionality for this button
+        // Place the floating AR object in the view
+        if let plane = SCNNode() as? Plane, let planeParent = plane.parent {
+            self.placeGreetingText(parentNode: planeParent)
+        }
+    }
+    
+    @objc func tappedText(button: UIButton) {
+        // Haptic feedback
+        let feedback = UISelectionFeedbackGenerator()
+        feedback.selectionChanged()
+        
+        // Store text from the tapped button
+        let textTapped = button.titleLabel?.text ?? "Hello"
+        print(textTapped)
+        
+        // Close drawer when text is tapped
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+            self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+            self.collectionView.frame.origin.y = CGFloat(screenSize.height)
+            self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            self.cameraButton.backgroundColor = Colours.offWhite
+            self.cameraButton.layer.borderColor = Colours.white.cgColor
+        })
+        
+        // Add selected text to the AR view
+        textNode = self.createGreetingTextNode(string: textTapped)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -347,6 +351,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        
+        // Detect horizontal planes
+        configuration.planeDetection = .horizontal
 
         // Run the view's session
         sceneView.session.run(configuration)
@@ -362,6 +369,64 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
+    }
+    
+    var textNode = SCNNode()
+    var planes = [ARPlaneAnchor: Plane]()
+    
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        DispatchQueue.main.async {
+            // Add a plane to the view if an anchor point exists
+            if let planeAnchor = anchor as? ARPlaneAnchor {
+                self.addPlane(node: node, anchor: planeAnchor)
+            }
+        }
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        DispatchQueue.main.async {
+            // Update the plane when something changes in the view
+            if let planeAnchor = anchor as? ARPlaneAnchor {
+                self.updatePlane(anchor: planeAnchor)
+            }
+        }
+    }
+    
+    func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
+        // Add a plane to the view based on the anchor point
+        let plane = Plane(anchor)
+        node.addChildNode(plane)
+        planes[anchor] = plane
+    }
+    
+    func updatePlane(anchor: ARPlaneAnchor) {
+        // Update the plane based on any changes
+        if let plane = planes[anchor] {
+            plane.update(anchor)
+        }
+    }
+    
+    func createGreetingTextNode(string: String) -> SCNNode {
+        // Create a 3D text model based on a passed in String
+        let text = SCNText(string: string, extrusionDepth: 0.1)
+        // Font size is in scene units (meters)
+        text.font = UIFont.systemFont(ofSize: 1.0)
+        // Flatness is smoothness of curves and edges (a smaller flatness value looks better, but at the cost of performance)
+        text.flatness = 0.008
+        text.firstMaterial?.diffuse.contents = UIColor.white
+        
+        // Add the model to the scene
+        let textNode = SCNNode(geometry: text)
+        let fontSize = Float(0.04)
+        textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
+        
+        return textNode
+    }
+    
+    func placeGreetingText(parentNode: SCNNode) {
+        // Binds a text model to a parent node
+        textNode.position = SCNVector3Zero
+        parentNode.addChildNode(textNode)
     }
 
     // MARK: - ARSCNViewDelegate
