@@ -22,3 +22,8 @@ struct Colours {
     // TO DO: Agree on main app tint colour
     static var appTintColour = UIColor(red: 30/255, green: 70/255, blue: 150/255, alpha: 1)
 }
+
+struct ScreenSize {
+    static var width: CGFloat = UIViewController().view.bounds.width
+    static var height: CGFloat = UIViewController().view.bounds.height
+}
