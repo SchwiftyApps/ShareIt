@@ -67,7 +67,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
         overlayView.alpha = 0
         
-        // Add light for shadowsdirectionalLight.castsShadow = true
+        // Add light for shadows
+        directionLight.castsShadow = true
         directionLight.shadowMode = .deferred
         directionLight.shadowColor = UIColor.black.withAlphaComponent(0.6)
         directionLight.shadowRadius = 5.0
