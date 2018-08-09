@@ -333,9 +333,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // TO DO: Logic for sending off AR objects to the server
         
         // Display alert showing success once the AR objects have been uploaded
+        self.createAlertBanner(width: 300, yPos: Int(screenHeight) - Int(195))
+    }
+    
+    func createAlertBanner(width: CGFloat, yPos: Int) {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
         let banner = UIButton()
-        banner.frame = CGRect(x: Int(screenWidth/2 - 150), y: Int(screenHeight) - Int(200), width: 300, height: 40)
-        banner.layer.cornerRadius = 10
+        banner.frame = CGRect(x: Int(screenWidth/2) - Int(width/2), y: Int(yPos), width: Int(width), height: 40)
+        banner.layer.cornerRadius = 20
         banner.backgroundColor = Colours.appTintColour
         banner.setTitle("Successfully uploaded to server", for: .normal)
         banner.setTitleColor(Colours.white, for: .normal)
