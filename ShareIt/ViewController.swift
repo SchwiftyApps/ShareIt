@@ -319,14 +319,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedCameraRightButton(button: UIButton) {
+        // Define sizes
+        let screenWidth = self.view.bounds.width
+        let screenHeight = self.view.bounds.height
+        
         // Haptic feedback
         let feedback = UISelectionFeedbackGenerator()
         feedback.selectionChanged()
         
-        // Go to the kitura view (server related view for data storage and retrieval)
+        // Send off placed objects to the Kitura server
         self.tapDismiss()
-        let controller = KituraViewController()
-        self.show(controller, sender: self)
+        
+        // TO DO: Logic for sending off AR objects to the server
+        
+        // Display alert showing success once the AR objects have been uploaded
+        let banner = UIButton()
+        banner.frame = CGRect(x: Int(screenWidth/2 - 150), y: Int(screenHeight) - Int(200), width: 300, height: 40)
+        banner.layer.cornerRadius = 10
+        banner.backgroundColor = Colours.appTintColour
+        banner.setTitle("Successfully uploaded to server", for: .normal)
+        banner.setTitleColor(Colours.white, for: .normal)
+        banner.titleLabel?.textColor = Colours.white
+        banner.alpha = 0
+        self.view.addSubview(banner)
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            banner.alpha = 1
+            let feedback = UINotificationFeedbackGenerator()
+            feedback.notificationOccurred(.success)
+        })
+        
+        UIView.animate(withDuration: 0.5, delay: 2, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            banner.alpha = 0
+        })
     }
     
     @objc func tappedCameraButton(button: UIButton) {
