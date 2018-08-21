@@ -55,12 +55,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = false
         
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        //sceneView.scene = scene
-        
         // Set up the overlay view
         overlayView.frame = CGRect(x: 0, y: 0, width: Int(ScreenSize.width), height: Int(ScreenSize.height) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
@@ -323,28 +317,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedback.selectionChanged()
         
-        let results = sceneView.hitTest(CGPoint(x:0,y:self.view.bounds.height - 300), types: [ARHitTestResult.ResultType.featurePoint])
-        guard let hitFeature = results.last else { return }
-        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
-        let hitPosition = SCNVector3Make(hitTransform.m41,
-                                         hitTransform.m42,
-                                         hitTransform.m43)
+//        let results = sceneView.hitTest(CGPoint(x:0,y:self.view.bounds.height - 300), types: [ARHitTestResult.ResultType.featurePoint])
+//        guard let hitFeature = results.last else { return }
+//        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
+//        let hitPosition = SCNVector3Make(hitTransform.m41,
+//                                         hitTransform.m42,
+//                                         hitTransform.m43)
         
         // Place the ARkit object into the scene
-        let objectNode = SCNNode()
-        objectNode.position = hitPosition
-        objectNode.position.y = objectNode.position.y + 1
-        objectNode.castsShadow = true
+//        let objectNode = SCNNode()
+//        objectNode.position = hitPosition
+//        objectNode.position.y = objectNode.position.y + 1
+//        objectNode.castsShadow = true
+        textNode.position.z = -1
         sceneView.scene.rootNode.addChildNode(textNode)
-//        hitResults = sceneView.hitTest(CGPoint(x:view.bounds.width/2,y:view.bounds.height/2), options: nil)
-        
-        // Place the floating AR object in the view
-        //if let plane = SCNPlane() {
-               // self.placeGreetingText(parentNode: objectNode)
-        
-        //}
-            
-        
     }
     
     @objc func tappedText(button: UIButton) {
