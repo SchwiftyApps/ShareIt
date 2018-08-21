@@ -59,7 +59,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let scene = SCNScene(named: "art.scnassets/ship.scn")!
         
         // Set the scene to the view
-        sceneView.scene = scene
+        //sceneView.scene = scene
         
         // Set up the overlay view
         overlayView.frame = CGRect(x: 0, y: 0, width: Int(ScreenSize.width), height: Int(ScreenSize.height) - Int(120))
@@ -323,10 +323,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedback.selectionChanged()
         
+        let results = sceneView.hitTest(CGPoint(x:0,y:self.view.bounds.height - 300), types: [ARHitTestResult.ResultType.featurePoint])
+        guard let hitFeature = results.last else { return }
+        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
+        let hitPosition = SCNVector3Make(hitTransform.m41,
+                                         hitTransform.m42,
+                                         hitTransform.m43)
+        
+        // Place the ARkit object into the scene
+        let objectNode = SCNNode()
+        objectNode.position = hitPosition
+        objectNode.position.y = objectNode.position.y + 1
+        objectNode.castsShadow = true
+        sceneView.scene.rootNode.addChildNode(textNode)
+//        hitResults = sceneView.hitTest(CGPoint(x:view.bounds.width/2,y:view.bounds.height/2), options: nil)
+        
         // Place the floating AR object in the view
-        if let plane = SCNNode() as? Plane, let planeParent = plane.parent {
-            self.placeGreetingText(parentNode: planeParent)
-        }
+        //if let plane = SCNPlane() {
+               // self.placeGreetingText(parentNode: objectNode)
+        
+        //}
+            
+        
     }
     
     @objc func tappedText(button: UIButton) {
@@ -421,7 +439,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Add the model to the scene
         // TO DO: Add pinch gesture and adjust scale value to scale text before dropping in the view
         let textNode = SCNNode(geometry: text)
-        let fontSize = Float(0.04)
+        let fontSize = Float(0.4)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
         
         // Allow the text node to cast a shadow
