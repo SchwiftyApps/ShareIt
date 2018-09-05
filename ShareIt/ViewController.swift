@@ -156,14 +156,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // TO DO: Consider replacing the icons below with better quality icons
         
         // Create camera background for when the camera button is long-pressed
-        self.cameraBackground.frame = CGRect(x: Int(screenSize.width/2) - Int(146), y: Int(screenSize.height) - Int(60) - 62, width: 292, height: 84)
+        self.cameraBackground.frame = CGRect(x: Int(screenSize.width/2) - Int(146), y: Int(screenSize.height) - Int(75) - 66, width: 292, height: 84)
         self.cameraBackground.backgroundColor = Colours.grey.withAlphaComponent(0.8)
         self.cameraBackground.layer.cornerRadius = CGFloat(42)
         self.cameraBackground.alpha = 0
         self.sceneView.addSubview(self.cameraBackground)
         
         // Create camera left button for when the camera button is long-pressed
-        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(60) - 40, width: 40, height: 40)
+        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 0
@@ -172,7 +172,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
-        self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(78), y: Int(screenSize.height) - Int(60) - 40, width: 40, height: 40)
+        self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(78), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraRightButton.backgroundColor = Colours.clear
         self.cameraRightButton.layer.cornerRadius = CGFloat(32)
         self.cameraRightButton.alpha = 0
@@ -181,7 +181,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraRightButton)
         
         // Create the main camera button and add it to the view
-        self.cameraButton.frame = CGRect(x: Int(screenSize.width/2) - Int(60/2), y: Int(screenSize.height) - Int(60) - 50, width: 60, height: 60)
+        self.cameraButton.frame = CGRect(x: Int(screenSize.width/2) - Int(60/2), y: Int(screenSize.height) - Int(130), width: 60, height: 60)
         self.cameraButton.backgroundColor = Colours.offWhite
         self.cameraButton.layer.cornerRadius = CGFloat(60/2)
         self.cameraButton.layer.borderColor = Colours.white.cgColor
@@ -190,7 +190,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraButton)
         
         // Create the swipe up prompt indicator
-        self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(40), width: 40, height: 37)
+        self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(60), width: 40, height: 37)
         self.upIndicator.backgroundColor = Colours.clear
         self.upIndicator.alpha = 0.65
         self.upIndicator.image = UIImage(named: "upArrow")
