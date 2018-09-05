@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ShareIt
 //
-//  Created by Shibab Mehboob on 30/07/2018.
+//  Created by Andrew Lees, David Dunn, Kye Maloy, and Shihab Mehboob on 30/07/2018.
 //  Copyright © 2018 IBM. All rights reserved.
 //
 
@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        // Set the app's tint colour (for use in alerts and system views)
+        window?.tintColor = Colours.appTintColour
         return true
     }
 
