@@ -11,7 +11,7 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
-    
+	
     // ARKit variables
     var textNode = SCNNode()
     var planes = [ARPlaneAnchor: Plane]()
@@ -19,6 +19,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var directionLight = SCNLight()
     
     // UI variables
+
     var cameraButton = UIButton()
     var cameraBackground = UIView()
     var cameraLeftButton = UIButton()
@@ -27,10 +28,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var overlayView = UIButton()
     var upIndicator = UIImageView()
     var collectionView: UICollectionView!
+	
     let feedback = UISelectionFeedbackGenerator()
     let feedbackSuccess = UINotificationFeedbackGenerator()
-    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hëllo", "Hêy", "Hī", "Høla", "Hęllo", "Hėy", "Hì", "Hœla"]
+    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
+    public struct screenSize {
+        static var width: CGFloat = UIViewController().view.bounds.width
+        static var height: CGFloat = UIViewController().view.bounds.height
+    }
+	
     override var prefersStatusBarHidden: Bool {
         // Status bar should ideally be hidden in an AR experience
         return true
@@ -40,8 +47,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         super.viewDidLoad()
         
         // Set up the scene view's frame
-        sceneView.frame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)
-        
+        sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+		
         // Set the session's delegate
         sceneView.session.delegate = self
         
@@ -54,9 +61,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = false
-        
+		
         // Set up the overlay view
-        overlayView.frame = CGRect(x: 0, y: 0, width: Int(ScreenSize.width), height: Int(ScreenSize.height) - Int(120))
+        overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenSize.width), height: Int(screenSize.height) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
         overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
         overlayView.alpha = 0
@@ -66,6 +73,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         directionLight.shadowMode = .deferred
         directionLight.shadowColor = UIColor.black.withAlphaComponent(0.6)
         directionLight.shadowRadius = 5.0
+		
+        // Add the scene to the view
+        self.view.addSubview(sceneView)
+        self.view.addSubview(overlayView)
+        
+
+        // Set up the overlay view
+        overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenSize.width), height: Int(screenSize.height) - Int(120))
+        overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
+        overlayView.addTarget(self, action: #selector(self.tappedDismissOverlay), for: .touchUpInside)
+        overlayView.alpha = 0
         
         // Add the scene to the view
         self.view.addSubview(sceneView)
@@ -92,6 +110,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == .began) {
             // Gesture state when long-hold began
+
             feedback.selectionChanged()
             
             UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -118,8 +137,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
             
             // Move drawer with pan gesture
-            self.drawerView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(ScreenSize.width), height: Int(ScreenSize.height))
-            self.collectionView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(ScreenSize.width), height: 120)
+
+            self.drawerView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenSize.width), height: Int(screenSize.height))
+            self.collectionView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenSize.width), height: 120)
         } else if gestureRecognizer.state == .ended {
             // Gesture state when the pan process has ended
             // Animates smoothly to the desired end position
@@ -128,8 +148,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 // Open drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
-                    self.drawerView.frame.origin.y = CGFloat(ScreenSize.height)
-                    self.collectionView.frame.origin.y = CGFloat(ScreenSize.height - 120)
+
+                    self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+                    self.collectionView.frame.origin.y = CGFloat(screenSize.height - 120)
                     self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
                     self.cameraButton.backgroundColor = Colours.grey.withAlphaComponent(0.5)
                     self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
@@ -140,8 +161,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 // Close drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
-                    self.drawerView.frame.origin.y = CGFloat(ScreenSize.height)
-                    self.collectionView.frame.origin.y = CGFloat(ScreenSize.height)
+
+                    self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+                    self.collectionView.frame.origin.y = CGFloat(screenSize.height)
                     self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
                     self.cameraButton.backgroundColor = Colours.offWhite
                     self.cameraButton.layer.borderColor = Colours.white.cgColor
@@ -156,23 +178,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // TO DO: Consider replacing the icons below with better quality icons
         
         // Create camera background for when the camera button is long-pressed
-        self.cameraBackground.frame = CGRect(x: Int(ScreenSize.width/2) - Int(146), y: Int(ScreenSize.height) - Int(60) - 62, width: 292, height: 84)
+        self.cameraBackground.frame = CGRect(x: Int(screenSize.width/2) - Int(146), y: Int(screenSize.height) - Int(75) - 66, width: 292, height: 84)
         self.cameraBackground.backgroundColor = Colours.grey.withAlphaComponent(0.8)
         self.cameraBackground.layer.cornerRadius = CGFloat(42)
         self.cameraBackground.alpha = 0
         self.sceneView.addSubview(self.cameraBackground)
         
         // Create camera left button for when the camera button is long-pressed
-        self.cameraLeftButton.frame = CGRect(x: Int(ScreenSize.width/2) - Int(120), y: Int(ScreenSize.height) - Int(60) - 40, width: 40, height: 40)
+        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 0
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-        self.cameraLeftButton.setImage(UIImage(named: "cross"), for: .normal)
+
+        self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
-        self.cameraRightButton.frame = CGRect(x: Int(ScreenSize.width/2) + Int(78), y: Int(ScreenSize.height) - Int(60) - 40, width: 40, height: 40)
+        self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(78), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraRightButton.backgroundColor = Colours.clear
         self.cameraRightButton.layer.cornerRadius = CGFloat(32)
         self.cameraRightButton.alpha = 0
@@ -181,7 +204,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraRightButton)
         
         // Create the main camera button and add it to the view
-        self.cameraButton.frame = CGRect(x: Int(ScreenSize.width/2) - Int(60/2), y: Int(ScreenSize.height) - Int(60) - 50, width: 60, height: 60)
+        self.cameraButton.frame = CGRect(x: Int(screenSize.width/2) - Int(60/2), y: Int(screenSize.height) - Int(130), width: 60, height: 60)
         self.cameraButton.backgroundColor = Colours.offWhite
         self.cameraButton.layer.cornerRadius = CGFloat(60/2)
         self.cameraButton.layer.borderColor = Colours.white.cgColor
@@ -190,7 +213,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraButton)
         
         // Create the swipe up prompt indicator
-        self.upIndicator.frame = CGRect(x: Int(ScreenSize.width/2) - Int(20), y: Int(ScreenSize.height) - Int(40), width: 40, height: 37)
+
+        self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(60), width: 40, height: 37)
         self.upIndicator.backgroundColor = Colours.clear
         self.upIndicator.alpha = 0.65
         self.upIndicator.image = UIImage(named: "upArrow")
@@ -199,7 +223,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func createDrawer() {
         // Create the drawer and add it to the view just off the screen on the y axis
-        self.drawerView.frame = CGRect(x: 0, y: Int(ScreenSize.height), width: Int(ScreenSize.width), height: Int(ScreenSize.height))
+
+        self.drawerView.frame = CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: Int(screenSize.height))
         self.drawerView.backgroundColor = Colours.grey
         self.sceneView.addSubview(self.drawerView)
         
@@ -208,8 +233,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         layout.sectionInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         layout.itemSize = CGSize(width: 120, height: 60)
         layout.scrollDirection = .horizontal
-        self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(ScreenSize.height), width: Int(ScreenSize.width), height: 120), collectionViewLayout: layout)
-        self.collectionView.contentSize = CGSize(width: ScreenSize.width * 5, height: 120)
+
+        self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: 120), collectionViewLayout: layout)
+        self.collectionView.contentSize = CGSize(width: screenSize.width * 5, height: 120)
         self.collectionView.isScrollEnabled = true
         self.collectionView.backgroundColor = Colours.clear
         self.collectionView.showsHorizontalScrollIndicator = false
@@ -237,6 +263,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         cell.text.addTarget(self, action: #selector(self.tappedText), for: .touchUpInside)
         return cell
     }
+	
     
     @objc func tappedDismissOverlay(button: UIButton) {
         // Handle any button related functionality here
@@ -246,9 +273,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func tapDismiss() {
         // Close drawer
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-            self.sceneView.frame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)
-            self.drawerView.frame.origin.y = CGFloat(ScreenSize.height)
-            self.collectionView.frame.origin.y = CGFloat(ScreenSize.height)
+
+            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+            self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+            self.collectionView.frame.origin.y = CGFloat(screenSize.height)
             self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
@@ -276,9 +304,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         // Display alert showing that the AR objects have been deleted
-        self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(ScreenSize.height) - Int(195))
+        self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
-    
+     
     @objc func tappedCameraRightButton(button: UIButton) {
         // Haptic feedback
         feedback.selectionChanged()
@@ -289,12 +317,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // TO DO: Logic for sending off AR objects to the server
         
         // Display alert showing success once the AR objects have been uploaded
-        self.createAlertBanner(text: "Successfully uploaded to server", width: 300, yPos: Int(ScreenSize.height) - Int(195))
+
+        self.createAlertBanner(text: "Successfully uploaded to server", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
     
     func createAlertBanner(text: String, width: CGFloat, yPos: Int) {
         let banner = UIButton()
-        banner.frame = CGRect(x: Int(ScreenSize.width/2) - Int(width/2), y: Int(yPos), width: Int(width), height: 40)
+
+        banner.frame = CGRect(x: Int(screenSize.width/2) - Int(width/2), y: Int(yPos), width: Int(width), height: 40)
         banner.layer.cornerRadius = 20
         banner.backgroundColor = Colours.appTintColour
         banner.setTitle(text, for: .normal)
@@ -305,7 +335,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
             banner.alpha = 1
-            self.feedbackSuccess.notificationOccurred(.success)
         })
         
         UIView.animate(withDuration: 0.5, delay: 2, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -342,9 +371,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Close drawer when text is tapped
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-            self.sceneView.frame = CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.height)
-            self.drawerView.frame.origin.y = CGFloat(ScreenSize.height)
-            self.collectionView.frame.origin.y = CGFloat(ScreenSize.height)
+            self.sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+            self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+            self.collectionView.frame.origin.y = CGFloat(screenSize.height)
             self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
@@ -352,6 +381,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Add selected text to the AR view
         textNode = self.createGreetingTextNode(string: textTapped)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
