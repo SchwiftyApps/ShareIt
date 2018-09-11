@@ -21,8 +21,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     var textTapped = ""
     var model: Model?
-    let client = KituraKit(baseURL: "http://localhost:8080")
-    
+    let client = KituraKit(baseURL: "http://9.240.45.226:8080")
+
     // UI variables
 
     var cameraButton = UIButton()
@@ -341,10 +341,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.model?.longitude = 12
         self.model?.lattitude = 14
         self.model?.id = "1"
-        
+        let model2 = Model(id: "1", text: self.textTapped, lattitude: 14, longitude: 12)
         // Send off AR-related model to the server
         if let client = client {
-            client.post("/sample", data: self.model) { (data: Model?, error: Error?) in
+            client.post("/sample", data: model2) { (data: Model?, error: Error?) in
+                print(model2)
                 guard error == nil else {
                     print("Error saving data to the server: \(error!)")
                     return
