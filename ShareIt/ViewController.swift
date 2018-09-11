@@ -9,6 +9,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import KituraKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
 	
@@ -17,6 +18,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var planes = [ARPlaneAnchor: Plane]()
     var sceneView = ARSCNView()
     var directionLight = SCNLight()
+    
+    var textTapped = ""
+    var model: Model?
+    let client = KituraKit(baseURL: "http://localhost:8080")
     
     // UI variables
 
@@ -30,6 +35,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var collectionView: UICollectionView!
 	
     let feedback = UISelectionFeedbackGenerator()
+    let feedbackImpact = UIImpactFeedbackGenerator()
     let feedbackSuccess = UINotificationFeedbackGenerator()
     var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
     
@@ -92,6 +98,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.createCameraButton()
         self.configureGestures()
         self.createDrawer()
+        
+        self.fetchFromServer()
+    }
+    
+    func fetchFromServer() {
+        if let client = client {
+            client.get("/sample") { (data: Model?, error: Error?) in
+                self.model = data
+                
+                // TO DO: Create node in user's view from the model
+                let text = self.model?.text
+                let long = self.model?.longitude
+                let lat = self.model?.lattitude
+            }
+        }
     }
     
     func configureGestures() {
@@ -314,7 +335,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Send off placed objects to the Kitura server
         self.tapDismiss()
         
-        // TO DO: Logic for sending off AR objects to the server
+        // TO DO: Change longitude and lattitude
+        self.model?.text = self.textTapped
+        self.model?.longitude = 12
+        self.model?.lattitude = 14
+        
+        // Send off AR-related model to the server
+        if let client = client {
+            client.post("/sample", data: self.model) { (data: Model?, error: Error?) in
+                guard error == nil else {
+                    print("Error saving data to the server: \(error!)")
+                    return
+                }
+                print("Saving data to the server succeeded")
+            }
+        }
         
         // Display alert showing success once the AR objects have been uploaded
 
@@ -342,23 +377,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         })
     }
     
+    func addPoint(point: SCNVector3, distance: Float) -> SCNVector3 {
+        // Add distance to the point
+        let result = SCNVector3Make(point.x + distance, point.y + distance, point.z + distance)
+        return result
+    }
+    
+    func cameraPosition(in view: ARSCNView) -> SCNVector3? {
+        // Get the camera position
+        guard let lastFrame = view.session.currentFrame else {
+            return nil
+        }
+        let position = lastFrame.camera.transform * float4(x: 0, y: 0, z: 0, w: 1)
+        let camera: SCNVector3 = SCNVector3(position.x, position.y, position.z)
+        return camera
+    }
+    
     @objc func tappedCameraButton(button: UIButton) {
         // Haptic feedback
-        feedback.selectionChanged()
+        feedbackImpact.impactOccurred()
         
-//        let results = sceneView.hitTest(CGPoint(x:0,y:self.view.bounds.height - 300), types: [ARHitTestResult.ResultType.featurePoint])
-//        guard let hitFeature = results.last else { return }
-//        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
-//        let hitPosition = SCNVector3Make(hitTransform.m41,
-//                                         hitTransform.m42,
-//                                         hitTransform.m43)
-        
-        // Place the ARkit object into the scene
-//        let objectNode = SCNNode()
-//        objectNode.position = hitPosition
-//        objectNode.position.y = objectNode.position.y + 1
-//        objectNode.castsShadow = true
-        textNode.position.z = -1
+        // Place the ARkit object into the scene at a distance of 16 in front of the user
+        let pos = addPoint(point: self.cameraPosition(in: self.sceneView) ?? SCNVector3(0, 0, 0), distance: 16)
+        textNode.position = pos
         sceneView.scene.rootNode.addChildNode(textNode)
     }
     
@@ -367,7 +408,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         feedback.selectionChanged()
         
         // Store text from the tapped button
-        let textTapped = button.titleLabel?.text ?? "Hello"
+        textTapped = button.titleLabel?.text ?? "Hello"
         
         // Close drawer when text is tapped
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
