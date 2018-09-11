@@ -386,7 +386,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Send off AR-related model to the server
         if let client = client {
             client.post("/sample", data: model2) { (data: Model?, error: Error?) in
-                print(model2)
                 guard error == nil else {
                     print("Error saving data to the server: \(error!)")
                     return
