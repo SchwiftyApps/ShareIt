@@ -340,7 +340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.model?.text = self.textTapped
         self.model?.longitude = 12
         self.model?.lattitude = 14
-        self.model?.id = 1
+        self.model?.id = "1"
         
         // Send off AR-related model to the server
         if let client = client {
