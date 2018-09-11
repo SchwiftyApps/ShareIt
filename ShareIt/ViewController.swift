@@ -111,6 +111,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 let text = self.model?.text
                 let long = self.model?.longitude
                 let lat = self.model?.lattitude
+                let id = self.model?.id
             }
         }
     }
@@ -339,6 +340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.model?.text = self.textTapped
         self.model?.longitude = 12
         self.model?.lattitude = 14
+        self.model?.id = 1
         
         // Send off AR-related model to the server
         if let client = client {
@@ -398,8 +400,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         feedbackImpact.impactOccurred()
         
         // Place the ARkit object into the scene at a distance of 16 in front of the user
-        let pos = addPoint(point: self.cameraPosition(in: self.sceneView) ?? SCNVector3(0, 0, 0), distance: 16)
-        textNode.position = pos
+        //let pos = addPoint(point: self.cameraPosition(in: self.sceneView) ?? SCNVector3(0, 0, 0), distance: 16)
+        //textNode.position = pos
+        textNode.position.z = -1
         sceneView.scene.rootNode.addChildNode(textNode)
     }
     
