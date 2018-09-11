@@ -339,6 +339,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             node.removeFromParentNode()
         }
         
+        client?.delete("/sample", identifier: "1", respondWith: { (error: Error?) in
+            print("Deleted item from the server")
+        })
+        
         // Display alert showing that the AR objects have been deleted
         self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
