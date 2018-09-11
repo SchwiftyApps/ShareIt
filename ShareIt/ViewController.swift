@@ -381,7 +381,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.model?.longitude = self.long
         self.model?.lattitude = self.lat
         self.model?.id = "1"
-        let model2 = Model(id: "1", text: self.textTapped, lattitude: 14, longitude: 12)
+        let model2 = Model(id: "1", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
         // Send off AR-related model to the server
         if let client = client {
