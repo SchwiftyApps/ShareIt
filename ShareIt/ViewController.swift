@@ -114,14 +114,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func fetchFromServer() {
         if let client = client {
-            client.get("/sample") { (data: Model?, error: Error?) in
-                self.model = data
-                
+//            self.client?.get("", identifier: Id) { (returnedToDo: ToDo?, error: Error?) -> Void in
+            let id: String = "1"
+            client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
                 // TO DO: Create node in user's view from the model
-                let text = self.model?.text
-                let long = self.model?.longitude
-                let lat = self.model?.lattitude
-                let id = self.model?.id
+                let text = data?.text
+                let long = data?.longitude
+                let lat = data?.lattitude
+                let id = data?.id
+                
+                self.textNode = self.createGreetingTextNode(string: text ?? "Damn")
+                self.textNode.position.z = -1
+                self.sceneView.scene.rootNode.addChildNode(self.textNode)
             }
         }
     }
