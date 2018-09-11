@@ -10,8 +10,9 @@ import UIKit
 import SceneKit
 import ARKit
 import KituraKit
+import CoreLocation
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, CLLocationManagerDelegate {
 	
     // ARKit variables
     var textNode = SCNNode()
@@ -22,6 +23,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var textTapped = ""
     var model: Model?
     let client = KituraKit(baseURL: "http://9.240.45.226:8080")
+    let locationManager = CLLocationManager()
+    var lat: Double = 0
+    var long: Double = 0
 
     // UI variables
 
@@ -110,11 +114,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.createDrawer()
         
         self.fetchFromServer()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        lat = locValue.latitude
+        long = locValue.longitude
     }
     
     func fetchFromServer() {
         if let client = client {
-//            self.client?.get("", identifier: Id) { (returnedToDo: ToDo?, error: Error?) -> Void in
             let id: String = "1"
             client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
                 // TO DO: Create node in user's view from the model
@@ -354,12 +370,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Send off placed objects to the Kitura server
         self.tapDismiss()
         
+        // Ask for Authorisation from the User.
+        self.locationManager.requestAlwaysAuthorization()
+        
+        // For use in foreground
+        self.locationManager.requestWhenInUseAuthorization()
+        
         // TO DO: Change longitude and lattitude
         self.model?.text = self.textTapped
-        self.model?.longitude = 12
-        self.model?.lattitude = 14
+        self.model?.longitude = self.long
+        self.model?.lattitude = self.lat
         self.model?.id = "1"
         let model2 = Model(id: "1", text: self.textTapped, lattitude: 14, longitude: 12)
+        
         // Send off AR-related model to the server
         if let client = client {
             client.post("/sample", data: model2) { (data: Model?, error: Error?) in
