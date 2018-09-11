@@ -49,6 +49,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         return true
     }
     
+    override func becomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            self.fetchFromServer()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
