@@ -15,7 +15,6 @@ import CoreLocation
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, CLLocationManagerDelegate {
 	
     // ARKit variables
-    var textNode = SCNNode()
     var planes = [ARPlaneAnchor: Plane]()
     var sceneView = ARSCNView()
     var directionLight = SCNLight()
@@ -28,7 +27,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var long: Double = 0
 
     // UI variables
-
     var cameraButton = UIButton()
     var cameraBackground = UIView()
     var cameraLeftButton = UIButton()
@@ -113,8 +111,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.configureGestures()
         self.createDrawer()
         
-        self.fetchFromServer()
-        
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
@@ -135,13 +131,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
                 // TO DO: Create node in user's view from the model
                 let text = data?.text
-                let long = data?.longitude
-                let lat = data?.lattitude
+                let longitude = data?.longitude
+                let lattitude = data?.lattitude
                 let id = data?.id
                 
-                self.textNode = self.createGreetingTextNode(string: text ?? "Damn")
-                self.textNode.position.z = -1
-                self.sceneView.scene.rootNode.addChildNode(self.textNode)
+                let longRound = Double(round(1000*(longitude ?? 1))/1000)
+                let latRound = Double(round(1000*(lattitude ?? 1))/1000)
+                
+                let selfLongRound = Double(round(1000*(self.long))/1000)
+                let selfLatRound = Double(round(1000*(self.lat))/1000)
+                
+                if longRound == selfLongRound && latRound == selfLatRound {
+                    var textNode = SCNNode()
+                    textNode = self.createGreetingTextNode(string: text ?? "Damn")
+                    textNode.position.z = -1
+                    self.sceneView.scene.rootNode.addChildNode(textNode)
+                }
+                
+                // TO DO: Create a map screen with all locations as pins
+                // TO DO: Periodically check that the location matches on a timer
             }
         }
     }
@@ -367,6 +375,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedback.selectionChanged()
         
+        // Fetch from the server before uploading
+        self.fetchFromServer()
+        
         // Send off placed objects to the Kitura server
         self.tapDismiss()
         
@@ -376,16 +387,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // For use in foreground
         self.locationManager.requestWhenInUseAuthorization()
         
-        // TO DO: Change longitude and lattitude
-        self.model?.text = self.textTapped
-        self.model?.longitude = self.long
-        self.model?.lattitude = self.lat
-        self.model?.id = "1"
-        let model2 = Model(id: "1", text: self.textTapped, lattitude: self.lat, longitude: self.long)
+        // Send off the model
+        // self.model?.text = self.textTapped
+        // self.model?.longitude = self.long
+        // self.model?.lattitude = self.lat
+        // self.model?.id = "1"
+        
+        let model = Model(id: "1", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
         // Send off AR-related model to the server
         if let client = client {
-            client.post("/sample", data: model2) { (data: Model?, error: Error?) in
+            client.post("/sample", data: model) { (data: Model?, error: Error?) in
                 guard error == nil else {
                     print("Error saving data to the server: \(error!)")
                     return
@@ -440,16 +452,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedbackImpact.impactOccurred()
         
-        // Place the ARkit object into the scene at a distance of 16 in front of the user
-        //let pos = addPoint(point: self.cameraPosition(in: self.sceneView) ?? SCNVector3(0, 0, 0), distance: 16)
-        //textNode.position = pos
-        textNode.position.z = -1
-        sceneView.scene.rootNode.addChildNode(textNode)
+        // Save the image to the user's camera roll
+        UIGraphicsBeginImageContext(self.sceneView.frame.size)
+        self.sceneView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        UIImageWriteToSavedPhotosAlbum(image ?? UIImage(), nil, nil, nil)
     }
     
     @objc func tappedText(button: UIButton) {
         // Haptic feedback
-        feedback.selectionChanged()
+        feedbackImpact.impactOccurred()
         
         // Store text from the tapped button
         textTapped = button.titleLabel?.text ?? "Hello"
@@ -465,8 +478,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         })
         
         // Add selected text to the AR view
+        var textNode = SCNNode()
         textNode = self.createGreetingTextNode(string: textTapped)
-
+        textNode.position.z = -1
+        self.sceneView.scene.rootNode.addChildNode(textNode)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -552,12 +567,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         (minVector, maxVector) = textNode.boundingBox
         textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, minVector.z + (maxVector.z - minVector.z)/2)
         return textNode
-    }
-    
-    func placeGreetingText(parentNode: SCNNode) {
-        // Binds a text model to a parent node, dropping it in the AR scene
-        textNode.position = SCNVector3Zero
-        parentNode.addChildNode(textNode)
     }
 
     // MARK: - ARSCNViewDelegate
