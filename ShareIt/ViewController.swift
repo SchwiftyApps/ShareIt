@@ -452,12 +452,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         feedbackImpact.impactOccurred()
         
         // Save the image to the user's camera roll
-//        UIGraphicsBeginImageContext(self.view.frame.size)
-//        self.view.layer.render(in: UIGraphicsGetCurrentContext()!)
-//        let image = UIGraphicsGetImageFromCurrentImageContext()
-//        UIGraphicsEndImageContext()
         let image = sceneView.snapshot()
-        UIImageWriteToSavedPhotosAlbum(image ?? UIImage(), nil, nil, nil)
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+        // Offer share sheet to share the image
+        let shareContent = ["Hey! Check out this cool AR experience 👾", image] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareContent, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     @objc func tappedText(button: UIButton) {
