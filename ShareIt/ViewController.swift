@@ -120,7 +120,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
         lat = locValue.latitude
         long = locValue.longitude
     }
@@ -453,10 +452,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         feedbackImpact.impactOccurred()
         
         // Save the image to the user's camera roll
-        UIGraphicsBeginImageContext(self.sceneView.frame.size)
-        self.sceneView.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+//        UIGraphicsBeginImageContext(self.view.frame.size)
+//        self.view.layer.render(in: UIGraphicsGetCurrentContext()!)
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+        let image = sceneView.snapshot()
         UIImageWriteToSavedPhotosAlbum(image ?? UIImage(), nil, nil, nil)
     }
     
