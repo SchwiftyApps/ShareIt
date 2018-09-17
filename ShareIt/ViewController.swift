@@ -147,6 +147,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.sceneView.scene.rootNode.addChildNode(textNode)
                 }
             }
+            
+//            client.get("/sample") { (data: [Model]?, error: Error?) in
+//                
+//            }
         }
     }
     
