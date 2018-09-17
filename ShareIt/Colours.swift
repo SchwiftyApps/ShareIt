@@ -19,6 +19,6 @@ struct Colours {
     static var purple = UIColor(red: 137/255, green: 76/255, blue: 183/255, alpha: 1)
     static var offWhite = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
     
-    // TO DO: Agree on main app tint colour
-    static var appTintColour = UIColor(red: 30/255, green: 70/255, blue: 150/255, alpha: 1)
+    // TO DO: Agree on main app tint colour, for now make it purple
+    static var appTintColour = UIColor(red: 137/255, green: 76/255, blue: 183/255, alpha: 1)
 }
