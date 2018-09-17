@@ -243,7 +243,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func createMapButton() {
         // Create the map button and add it to the view
         self.mapButton.frame = CGRect(x: Int(screenSize.width/4)*3 - Int(20), y: Int(screenSize.height) - Int(125), width: 50, height: 50)
-        self.mapButton.backgroundColor = Colours.offWhite
+        self.mapButton.backgroundColor = Colours.appTintColour
         self.mapButton.layer.cornerRadius = CGFloat(50/2)
         self.mapButton.addTarget(self, action: #selector(self.tappedMapButton), for: .touchUpInside)
         self.mapButton.setImage(UIImage(named: "left"), for: .normal)
