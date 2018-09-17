@@ -11,7 +11,7 @@ import UIKit
 import KituraKit
 import MapKit
 
-class mapViewController: UIViewController, CLLocationManagerDelegate {
+class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     var mapView = MKMapView()
     var locationManager = CLLocationManager()
@@ -55,6 +55,14 @@ class mapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func fetchServerLocations() {
+        
+        // Test pin when there are no server pins
+        //let customPin = MKPointAnnotation()
+        //customPin.coordinate = CLLocation(latitude: 51.024042, longitude: -1.399812).coordinate
+        //customPin.title = "Test Title"
+        //customPin.subtitle = "Test Subtitle"
+        //self.mapView.addAnnotation(customPin)
+        
         if let client = client {
             let id: String = "1"
             client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
@@ -64,6 +72,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate {
                 // Place a new pin at the location derived from the server
                 let customPin = MKPointAnnotation()
                 customPin.coordinate = CLLocation(latitude: lattitude ?? 0, longitude: longitude ?? 0).coordinate
+                customPin.title = data?.text
+                customPin.subtitle = "This item has the ID: \(data?.id)"
                 self.mapView.addAnnotation(customPin)
             }
         }
