@@ -127,26 +127,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func fetchFromServer() {
         if let client = client {
-            for x in 1...500 {
-                client.get("/sample", identifier: x) { (data: Model?, error: Error?) in
-                    // TO DO: Create node in user's view from the model
-                    let text = data?.text
-                    let longitude = data?.longitude
-                    let lattitude = data?.lattitude
-                    let id = data?.id
-                    
-                    let longRound = Double(round(1000*(longitude ?? 1))/1000)
-                    let latRound = Double(round(1000*(lattitude ?? 1))/1000)
-                    
-                    let selfLongRound = Double(round(1000*(self.long))/1000)
-                    let selfLatRound = Double(round(1000*(self.lat))/1000)
-                    
-                    if longRound == selfLongRound && latRound == selfLatRound {
-                        var textNode = SCNNode()
-                        textNode = self.createGreetingTextNode(string: text ?? "Damn")
-                        textNode.position.z = -1
-                        self.sceneView.scene.rootNode.addChildNode(textNode)
-                    }
+            client.get("/sample", identifier: "1") { (data: Model?, error: Error?) in
+                // TO DO: Create node in user's view from the model
+                let text = data?.text
+                let longitude = data?.longitude
+                let lattitude = data?.lattitude
+                let id = data?.id
+                
+                let longRound = Double(round(1000*(longitude ?? 1))/1000)
+                let latRound = Double(round(1000*(lattitude ?? 1))/1000)
+                
+                let selfLongRound = Double(round(1000*(self.long))/1000)
+                let selfLatRound = Double(round(1000*(self.lat))/1000)
+                
+                if longRound == selfLongRound && latRound == selfLatRound {
+                    var textNode = SCNNode()
+                    textNode = self.createGreetingTextNode(string: text ?? "Damn")
+                    textNode.position.z = -1
+                    self.sceneView.scene.rootNode.addChildNode(textNode)
                 }
             }
         }
@@ -408,7 +406,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.lattitude = self.lat
         // self.model?.id = "1"
         
-        let idToSend = arc4random_uniform(500) + 1
+        // Uncomment below to send random ID
+        //let idToSend = arc4random_uniform(500) + 1
+        // Uncomment below to send test ID of 1
+        let idToSend = "1"
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
