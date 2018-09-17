@@ -16,7 +16,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var mapView = MKMapView()
     var locationManager = CLLocationManager()
     var backButton = UIButton()
-    let client = KituraKit(baseURL: "http://159.122.181.186:32062")
+    let client = KituraKit(baseURL: "http://159.122.181.186:31651")
     
     override func viewDidLoad() {
         super.viewDidLoad()
