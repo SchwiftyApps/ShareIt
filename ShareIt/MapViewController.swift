@@ -73,7 +73,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 let customPin = MKPointAnnotation()
                 customPin.coordinate = CLLocation(latitude: lattitude ?? 0, longitude: longitude ?? 0).coordinate
                 customPin.title = data?.text
-                customPin.subtitle = "This item has the ID: \(data?.id)"
+                customPin.subtitle = "This item has the ID: \(String(describing: data?.id ?? "0"))"
                 self.mapView.addAnnotation(customPin)
             }
         }

@@ -412,7 +412,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.lattitude = self.lat
         // self.model?.id = "1"
         
-        let model = Model(id: "1", text: self.textTapped, lattitude: self.lat, longitude: self.long)
+        let idToSend = arc4random_uniform(10000) + 1
+        
+        let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
         // Send off AR-related model to the server
         if let client = client {
