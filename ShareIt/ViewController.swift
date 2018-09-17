@@ -39,7 +39,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let feedback = UISelectionFeedbackGenerator()
     let feedbackImpact = UIImpactFeedbackGenerator()
     let feedbackSuccess = UINotificationFeedbackGenerator()
-    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla", "😺", "💩", "👻", "🤖", "👾", "👽", "😈"]
+    var textArray: [String] = ["Kitura", "Swift", "Hello", "Hey", "Hi", "Hola", "Hêy", "Hëllo", "Hī", "Høla"]
     
     public struct screenSize {
         static var width: CGFloat = UIViewController().view.bounds.width
