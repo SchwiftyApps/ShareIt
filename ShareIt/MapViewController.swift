@@ -64,8 +64,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //self.mapView.addAnnotation(customPin)
         
         if let client = client {
-            let id: String = "1"
-            client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
+            for x in 1...1000 {
+            client.get("/sample", identifier: x) { (data: Model?, error: Error?) in
                 let longitude = data?.longitude
                 let lattitude = data?.lattitude
                 
@@ -75,6 +75,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 customPin.title = data?.text
                 customPin.subtitle = "This item has the ID: \(String(describing: data?.id ?? "0"))"
                 self.mapView.addAnnotation(customPin)
+            }
             }
         }
     }

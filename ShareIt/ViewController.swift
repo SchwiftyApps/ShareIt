@@ -13,7 +13,7 @@ import KituraKit
 import CoreLocation
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, CLLocationManagerDelegate {
-	
+    
     // ARKit variables
     var planes = [ARPlaneAnchor: Plane]()
     var sceneView = ARSCNView()
@@ -25,7 +25,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let locationManager = CLLocationManager()
     var lat: Double = 0
     var long: Double = 0
-
+    
     // UI variables
     var mapButton = UIButton()
     var cameraButton = UIButton()
@@ -36,7 +36,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var overlayView = UIButton()
     var upIndicator = UIImageView()
     var collectionView: UICollectionView!
-	
+    
     let feedback = UISelectionFeedbackGenerator()
     let feedbackImpact = UIImpactFeedbackGenerator()
     let feedbackSuccess = UINotificationFeedbackGenerator()
@@ -46,7 +46,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         static var width: CGFloat = UIViewController().view.bounds.width
         static var height: CGFloat = UIViewController().view.bounds.height
     }
-	
+    
     override var prefersStatusBarHidden: Bool {
         // Status bar should ideally be hidden in an AR experience
         return true
@@ -67,7 +67,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Set up the scene view's frame
         sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
-		
+        
         // Set the session's delegate
         sceneView.session.delegate = self
         
@@ -80,7 +80,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = false
-		
+        
         // Set up the overlay view
         overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenSize.width), height: Int(screenSize.height) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
@@ -92,12 +92,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         directionLight.shadowMode = .deferred
         directionLight.shadowColor = UIColor.black.withAlphaComponent(0.6)
         directionLight.shadowRadius = 5.0
-		
+        
         // Add the scene to the view
         self.view.addSubview(sceneView)
         self.view.addSubview(overlayView)
         
-
+        
         // Set up the overlay view
         overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenSize.width), height: Int(screenSize.height) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
@@ -128,29 +128,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func fetchFromServer() {
         if let client = client {
-            let id: String = "1"
-            client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
-                // TO DO: Create node in user's view from the model
-                let text = data?.text
-                let longitude = data?.longitude
-                let lattitude = data?.lattitude
-                let id = data?.id
-                
-                let longRound = Double(round(1000*(longitude ?? 1))/1000)
-                let latRound = Double(round(1000*(lattitude ?? 1))/1000)
-                
-                let selfLongRound = Double(round(1000*(self.long))/1000)
-                let selfLatRound = Double(round(1000*(self.lat))/1000)
-                
-                if longRound == selfLongRound && latRound == selfLatRound {
-                    var textNode = SCNNode()
-                    textNode = self.createGreetingTextNode(string: text ?? "Damn")
-                    textNode.position.z = -1
-                    self.sceneView.scene.rootNode.addChildNode(textNode)
+            for x in 1...1000 {
+                client.get("/sample", identifier: x) { (data: Model?, error: Error?) in
+                    // TO DO: Create node in user's view from the model
+                    let text = data?.text
+                    let longitude = data?.longitude
+                    let lattitude = data?.lattitude
+                    let id = data?.id
+                    
+                    let longRound = Double(round(1000*(longitude ?? 1))/1000)
+                    let latRound = Double(round(1000*(lattitude ?? 1))/1000)
+                    
+                    let selfLongRound = Double(round(1000*(self.long))/1000)
+                    let selfLatRound = Double(round(1000*(self.lat))/1000)
+                    
+                    if longRound == selfLongRound && latRound == selfLatRound {
+                        var textNode = SCNNode()
+                        textNode = self.createGreetingTextNode(string: text ?? "Damn")
+                        textNode.position.z = -1
+                        self.sceneView.scene.rootNode.addChildNode(textNode)
+                    }
+                    
+                    // TO DO: Create a map screen with all locations as pins
+                    // TO DO: Periodically check that the location matches on a timer
                 }
-                
-                // TO DO: Create a map screen with all locations as pins
-                // TO DO: Periodically check that the location matches on a timer
             }
         }
     }
@@ -171,7 +172,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if (gestureRecognizer.state == .began) {
             // Gesture state when long-hold began
-
+            
             feedback.selectionChanged()
             
             UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
@@ -200,7 +201,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
             
             // Move drawer with pan gesture
-
+            
             self.drawerView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenSize.width), height: Int(screenSize.height))
             self.collectionView.frame = CGRect(x: 0, y: Int(gestureRecognizer.view!.frame.size.height), width: Int(screenSize.width), height: 120)
         } else if gestureRecognizer.state == .ended {
@@ -211,7 +212,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 // Open drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2 - 120)
-
+                    
                     self.drawerView.frame.origin.y = CGFloat(screenSize.height)
                     self.collectionView.frame.origin.y = CGFloat(screenSize.height - 120)
                     self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
@@ -225,7 +226,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 // Close drawer
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: self.view.bounds.height/2)
-
+                    
                     self.drawerView.frame.origin.y = CGFloat(screenSize.height)
                     self.collectionView.frame.origin.y = CGFloat(screenSize.height)
                     self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -266,7 +267,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 0
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-
+        
         self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
         self.sceneView.addSubview(self.cameraLeftButton)
         
@@ -289,7 +290,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraButton)
         
         // Create the swipe up prompt indicator
-
+        
         self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(60), width: 40, height: 37)
         self.upIndicator.backgroundColor = Colours.clear
         self.upIndicator.alpha = 0.65
@@ -299,7 +300,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func createDrawer() {
         // Create the drawer and add it to the view just off the screen on the y axis
-
+        
         self.drawerView.frame = CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: Int(screenSize.height))
         self.drawerView.backgroundColor = Colours.purple
         self.sceneView.addSubview(self.drawerView)
@@ -309,7 +310,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         layout.sectionInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         layout.itemSize = CGSize(width: 120, height: 60)
         layout.scrollDirection = .horizontal
-
+        
         self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: 120), collectionViewLayout: layout)
         self.collectionView.contentSize = CGSize(width: screenSize.width * 5, height: 120)
         self.collectionView.isScrollEnabled = true
@@ -339,7 +340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         cell.text.addTarget(self, action: #selector(self.tappedText), for: .touchUpInside)
         return cell
     }
-	
+    
     
     @objc func tappedDismissOverlay(button: UIButton) {
         // Handle any button related functionality here
@@ -349,7 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func tapDismiss() {
         // Close drawer
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
-
+            
             self.sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
             self.drawerView.frame.origin.y = CGFloat(screenSize.height)
             self.collectionView.frame.origin.y = CGFloat(screenSize.height)
@@ -389,7 +390,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Display alert showing that the AR objects have been deleted
         self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
-     
+    
     @objc func tappedCameraRightButton(button: UIButton) {
         // Haptic feedback
         feedback.selectionChanged()
@@ -412,7 +413,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.lattitude = self.lat
         // self.model?.id = "1"
         
-        let idToSend = arc4random_uniform(10000) + 1
+        let idToSend = arc4random_uniform(1000) + 1
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
@@ -428,13 +429,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         // Display alert showing success once the AR objects have been uploaded
-
+        
         self.createAlertBanner(text: "Successfully uploaded to server", width: 300, yPos: Int(screenSize.height) - Int(195))
     }
     
     func createAlertBanner(text: String, width: CGFloat, yPos: Int) {
         let banner = UIButton()
-
+        
         banner.frame = CGRect(x: Int(screenSize.width/2) - Int(width/2), y: Int(yPos), width: Int(width), height: 40)
         banner.layer.cornerRadius = 20
         banner.backgroundColor = Colours.appTintColour
@@ -523,7 +524,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Detect horizontal planes
         configuration.planeDetection = .horizontal
-
+        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -599,17 +600,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, minVector.z + (maxVector.z - minVector.z)/2)
         return textNode
     }
-
+    
     // MARK: - ARSCNViewDelegate
     
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
+    /*
+     // Override to create and configure nodes for anchors added to the view's session.
+     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+     let node = SCNNode()
      
-        return node
-    }
-*/
+     return node
+     }
+     */
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
