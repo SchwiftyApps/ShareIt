@@ -27,6 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var long: Double = 0
 
     // UI variables
+    var mapButton = UIButton()
     var cameraButton = UIButton()
     var cameraBackground = UIView()
     var cameraLeftButton = UIButton()
@@ -107,6 +108,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.view.addSubview(sceneView)
         self.view.addSubview(overlayView)
         
+        self.createMapButton()
         self.createCameraButton()
         self.configureGestures()
         self.createDrawer()
@@ -231,6 +233,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 })
             }
         }
+    }
+    
+    func createMapButton() {
+        // Create the map button and add it to the view
+        self.mapButton.frame = CGRect(x: Int(screenSize.width/4)*3 - Int(20), y: Int(screenSize.height) - Int(125), width: 50, height: 50)
+        self.mapButton.backgroundColor = Colours.offWhite
+        self.mapButton.layer.cornerRadius = CGFloat(50/2)
+        self.mapButton.addTarget(self, action: #selector(self.tappedMapButton), for: .touchUpInside)
+        self.mapButton.setImage(UIImage(named: "left"), for: .normal)
+        self.mapButton.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        self.sceneView.addSubview(self.mapButton)
     }
     
     func createCameraButton() {
@@ -445,6 +458,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let position = lastFrame.camera.transform * float4(x: 0, y: 0, z: 0, w: 1)
         let camera: SCNVector3 = SCNVector3(position.x, position.y, position.z)
         return camera
+    }
+    
+    @objc func tappedMapButton() {
+        // Display the map view as an overlay
+        self.show(mapViewController(), sender: self)
     }
     
     @objc func tappedCameraButton(button: UIButton) {
