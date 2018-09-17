@@ -182,6 +182,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 self.mapButton.alpha = 0
                 self.overlayView.alpha = 1
                 self.upIndicator.alpha = 0
+                self.mapButton.alpha = 0
             })
         }
     }
@@ -218,6 +219,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
                     self.overlayView.alpha = 1
                     self.upIndicator.alpha = 0
+                    self.mapButton.alpha = 0
                 })
             } else {
                 // Close drawer
@@ -231,6 +233,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.cameraButton.layer.borderColor = Colours.white.cgColor
                     self.overlayView.alpha = 0
                     self.upIndicator.alpha = 0.65
+                    self.mapButton.alpha = 1
                 })
             }
         }
@@ -355,6 +358,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.layer.borderColor = Colours.white.cgColor
             self.overlayView.alpha = 0
             self.upIndicator.alpha = 0.65
+            self.mapButton.alpha = 1
         })
         
         // Dismiss camera background
@@ -363,6 +367,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraBackground.alpha = 0
             self.cameraLeftButton.alpha = 0
             self.cameraRightButton.alpha = 0
+            self.mapButton.alpha = 1
             self.mapButton.alpha = 1
         })
     }
@@ -498,6 +503,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
+            self.mapButton.alpha = 1
         })
         
         // Add selected text to the AR view
