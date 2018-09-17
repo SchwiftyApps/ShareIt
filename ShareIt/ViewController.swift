@@ -21,7 +21,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     var textTapped = ""
     var model: Model?
-    let client = KituraKit(baseURL: "http://159.122.181.186:32062")
+    let client = KituraKit(baseURL: "http://159.122.181.186:31651")
     let locationManager = CLLocationManager()
     var lat: Double = 0
     var long: Double = 0
