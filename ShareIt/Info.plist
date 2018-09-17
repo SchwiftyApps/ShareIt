@@ -26,17 +26,17 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This application will use the camera for Augmented Reality.</string>
+	<string>Allow ShareIt to use the camera for Augmented Reality</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow Location</string>
+	<string>Allow ShareIt to access your location to display ARKit objects around you</string>
 	<key>NSLocationUsageDescription</key>
-	<string>Allow Location</string>
+	<string>Allow ShareIt to access your location to display ARKit objects around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow Location</string>
+	<string>Allow ShareIt to access your location to display ARKit objects around you</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Allow Photo Library Access</string>
+	<string>Allow ShareIt to access your Photo Library to save the ARKit views</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow Photo Library Access</string>
+	<string>Allow ShareIt to access your Photo Library to save the ARKit views</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

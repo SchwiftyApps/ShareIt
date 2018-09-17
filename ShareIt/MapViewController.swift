@@ -8,12 +8,15 @@
 
 import Foundation
 import UIKit
+import KituraKit
 import MapKit
 
-class mapViewController: UIViewController {
+class mapViewController: UIViewController, CLLocationManagerDelegate {
     
     var mapView = MKMapView()
+    var locationManager = CLLocationManager()
     var backButton = UIButton()
+    let client = KituraKit(baseURL: "http://159.122.181.186:32062")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,10 +32,41 @@ class mapViewController: UIViewController {
         self.backButton.setImage(UIImage(named: "cross"), for: .normal)
         self.backButton.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         self.view.addSubview(self.backButton)
+        
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.distanceFilter = 50
+        self.locationManager.startUpdatingLocation()
+        
+        self.fetchServerLocations()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // Update the user's current location periodically
+        let region = MKCoordinateRegionMakeWithDistance(locations.last!.coordinate, 500, 500)
+        self.mapView.setRegion(region, animated: true)
+        self.mapView.showsUserLocation = true
     }
     
     @objc func goBack() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func fetchServerLocations() {
+        if let client = client {
+            let id: String = "1"
+            client.get("/sample", identifier: id) { (data: Model?, error: Error?) in
+                let longitude = data?.longitude
+                let lattitude = data?.lattitude
+                
+                // Place a new pin at the location derived from the server
+                let customPin = MKPointAnnotation()
+                customPin.coordinate = CLLocation(latitude: lattitude ?? 0, longitude: longitude ?? 0).coordinate
+                self.mapView.addAnnotation(customPin)
+            }
+        }
     }
     
 }
