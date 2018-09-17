@@ -97,7 +97,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.view.addSubview(sceneView)
         self.view.addSubview(overlayView)
         
-        
         // Set up the overlay view
         overlayView.frame = CGRect(x: 0, y: 0, width: Int(screenSize.width), height: Int(screenSize.height) - Int(120))
         overlayView.backgroundColor = Colours.black.withAlphaComponent(0.01)
@@ -128,7 +127,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func fetchFromServer() {
         if let client = client {
-            for x in 1...1000 {
+            for x in 1...500 {
                 client.get("/sample", identifier: x) { (data: Model?, error: Error?) in
                     // TO DO: Create node in user's view from the model
                     let text = data?.text
@@ -148,9 +147,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                         textNode.position.z = -1
                         self.sceneView.scene.rootNode.addChildNode(textNode)
                     }
-                    
-                    // TO DO: Create a map screen with all locations as pins
-                    // TO DO: Periodically check that the location matches on a timer
                 }
             }
         }
@@ -290,7 +286,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraButton)
         
         // Create the swipe up prompt indicator
-        
         self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(60), width: 40, height: 37)
         self.upIndicator.backgroundColor = Colours.clear
         self.upIndicator.alpha = 0.65
@@ -413,7 +408,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.lattitude = self.lat
         // self.model?.id = "1"
         
-        let idToSend = arc4random_uniform(1000) + 1
+        let idToSend = arc4random_uniform(500) + 1
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
@@ -471,6 +466,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     @objc func tappedMapButton() {
+        // Haptic feedback
+        feedback.selectionChanged()
+        
         // Display the map view as an overlay
         self.show(mapViewController(), sender: self)
     }
