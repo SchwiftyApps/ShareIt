@@ -211,7 +211,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.drawerView.frame.origin.y = CGFloat(screenSize.height)
                     self.collectionView.frame.origin.y = CGFloat(screenSize.height - 120)
                     self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-                    self.cameraButton.backgroundColor = Colours.grey.withAlphaComponent(0.5)
+                    self.cameraButton.backgroundColor = Colours.purple.withAlphaComponent(0.5)
                     self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
                     self.overlayView.alpha = 1
                     self.upIndicator.alpha = 0
@@ -238,7 +238,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Create camera background for when the camera button is long-pressed
         self.cameraBackground.frame = CGRect(x: Int(screenSize.width/2) - Int(146), y: Int(screenSize.height) - Int(75) - 66, width: 292, height: 84)
-        self.cameraBackground.backgroundColor = Colours.grey.withAlphaComponent(0.8)
+        self.cameraBackground.backgroundColor = Colours.purple.withAlphaComponent(0.8)
         self.cameraBackground.layer.cornerRadius = CGFloat(42)
         self.cameraBackground.alpha = 0
         self.sceneView.addSubview(self.cameraBackground)
@@ -284,7 +284,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Create the drawer and add it to the view just off the screen on the y axis
 
         self.drawerView.frame = CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: Int(screenSize.height))
-        self.drawerView.backgroundColor = Colours.grey
+        self.drawerView.backgroundColor = Colours.purple
         self.sceneView.addSubview(self.drawerView)
         
         // Create scrollable collectionView for the drawer content
@@ -315,7 +315,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TextCell
         cell.text.setTitle(self.textArray[indexPath.row], for: .normal)
         cell.text.setTitleColor(Colours.white, for: .normal)
-        cell.text.backgroundColor = Colours.greyLight
+        cell.text.backgroundColor = Colours.purpleLight
         cell.text.layer.cornerRadius = 10
         cell.text.titleLabel?.textAlignment = .center
         cell.text.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
