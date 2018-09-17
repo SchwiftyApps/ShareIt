@@ -179,6 +179,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 self.cameraBackground.alpha = 1
                 self.cameraLeftButton.alpha = 1
                 self.cameraRightButton.alpha = 1
+                self.mapButton.alpha = 0
                 self.overlayView.alpha = 1
                 self.upIndicator.alpha = 0
             })
@@ -362,6 +363,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraBackground.alpha = 0
             self.cameraLeftButton.alpha = 0
             self.cameraRightButton.alpha = 0
+            self.mapButton.alpha = 1
         })
     }
     
