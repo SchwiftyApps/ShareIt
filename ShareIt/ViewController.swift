@@ -277,8 +277,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 1
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-        
         self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
+        self.cameraLeftButton.layer.shadowColor = UIColor.black.cgColor
+        self.cameraLeftButton.layer.shadowOpacity = 0.4
+        self.cameraLeftButton.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.cameraLeftButton.layer.shadowRadius = 3
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
@@ -288,6 +291,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraRightButton.alpha = 1
         self.cameraRightButton.addTarget(self, action: #selector(self.tappedCameraRightButton), for: .touchUpInside)
         self.cameraRightButton.setImage(UIImage(named: "right"), for: .normal)
+        self.cameraRightButton.layer.shadowColor = UIColor.black.cgColor
+        self.cameraRightButton.layer.shadowOpacity = 0.4
+        self.cameraRightButton.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.cameraRightButton.layer.shadowRadius = 3
         self.sceneView.addSubview(self.cameraRightButton)
         
         // Create the main camera button and add it to the view
