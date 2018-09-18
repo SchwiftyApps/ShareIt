@@ -84,16 +84,11 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         var selectedAnnotation = view.annotation as? MKPointAnnotation
-        for items in models {
+        for items in models! {
             if items.id == selectedAnnotation?.subtitle {
                 print("ID in here")
                 print(selectedAnnotation?.title)
             }
         }
-    }
-
-    func info(sender: UIButton) {
-        print("selected pin")
-        print(selectedAnnotation?.coordinate)
     }
 }
