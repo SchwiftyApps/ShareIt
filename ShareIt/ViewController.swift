@@ -157,9 +157,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         
-        let touchLocation: CGPoint = gesture.location(in: gesture.view)
-        let projectedOrigin = sceneView.projectPoint(SCNVector3Make(0, 0, 0.4))
-        let locationNew = SCNVector3Make(Float(touchLocation.x), Float(touchLocation.y), projectedOrigin.z)
+        var touchLocation: CGPoint = gesture.location(in: gesture.view)
+        let projectedOrigin = sceneView.projectPoint(SCNVector3Make(Float(touchLocation.x), Float(touchLocation.y), 0.4))
+        let locationNew = SCNVector3Make(Float(projectedOrigin.x), Float(projectedOrigin.y), projectedOrigin.z)
 
         let position = locationNew
         textNode.position = position
