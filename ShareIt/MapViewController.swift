@@ -107,7 +107,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
                 self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
                 self.gotoButton.backgroundColor = Colours.appTintColour
-                self.gotoButton.setTitle("Place object in View", for: .normal)
+                self.gotoButton.setTitle("Tap to place object in View", for: .normal)
                 self.gotoButton.titleLabel?.textAlignment = .center
                 self.gotoButton.titleLabel?.textColor = UIColor.white
                 self.gotoButton.addTarget(self, action: #selector(tappedGoTo), for: .touchDown)
