@@ -80,4 +80,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("did select pin")
+        print(view.annotation?.title ?? "title")
+    }
 }
