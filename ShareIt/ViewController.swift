@@ -156,7 +156,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             return
         }
         
-        let locationNew = SCNVector3(x: Float(resultPoint.worldTransform.columns.3.x), y: Float(resultPoint.worldTransform.columns.3.y), z: Float(projectedOrigin.z))
+        let locationNew = SCNVector3(x: Float(result.worldTransform.columns.3.x), y: Float(result.worldTransform.columns.3.y), z: Float(sceneView.projectPoint(SCNVector3Zero).z))
 
         let position = locationNew
         textNode.position = position
