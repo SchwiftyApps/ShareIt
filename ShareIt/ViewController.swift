@@ -156,7 +156,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             return
         }
         
-        let position = SCNVector3Make(result.worldTransform.columns.3.x, result.worldTransform.columns.3.y, result.worldTransform.columns.3.z)
+        
+        var touchLocation: CGPoint = gesture.location(in: gesture.view)
+        let projectedOrigin = sceneView.projectPoint(SCNVector3Make(0, 0, 0.4))
+        let locationNew = SCNVector3Make(Float(touchLocation.x), Float(touchLocation.y), projectedOrigin.z)
+
+        let position = locationNew
         textNode.position = position
     }
 
@@ -194,7 +199,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func configureGestures() {
         // Configure pan gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        panGestureRecognizer.minimumNumberOfTouches = 1
+        panGestureRecognizer.minimumNumberOfTouches = 2
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
