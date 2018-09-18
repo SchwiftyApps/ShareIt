@@ -592,9 +592,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func createGreetingTextNode(string: String) -> SCNNode {
         // Create a 3D text model based on a passed in String
-        let text = SCNText(string: string, extrusionDepth: 0.1)
+        let text = SCNText(string: string, extrusionDepth: 0.17)
         // Font size is in scene units (meters)
-        text.font = UIFont.systemFont(ofSize: 1.0)
+        text.font = UIFont.boldSystemFont(ofSize: 1.0)
         // Flatness is smoothness of curves and edges (a smaller flatness value looks better, but at the cost of performance)
         text.flatness = 0.008
         
