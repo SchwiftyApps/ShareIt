@@ -252,7 +252,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func createMapButton() {
         // Create the map button and add it to the view
-        self.mapButton.frame = CGRect(x: Int(screenSize.width/4)*3 - Int(20), y: Int(screenSize.height) - Int(205), width: 50, height: 50)
+        self.mapButton.frame = CGRect(x: Int(screenSize.width/2) - Int(50/2), y: Int(screenSize.height) - Int(205), width: 50, height: 50)
         self.mapButton.backgroundColor = Colours.appTintColour
         self.mapButton.layer.cornerRadius = CGFloat(50/2)
         self.mapButton.addTarget(self, action: #selector(self.tappedMapButton), for: .touchUpInside)
@@ -272,7 +272,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraBackground)
         
         // Create camera left button for when the camera button is long-pressed
-        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 43, height: 43)
+        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(150), y: Int(screenSize.height) - Int(75), width: 43, height: 43)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 1
@@ -285,7 +285,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraLeftButton)
         
         // Create camera right button for when the camera button is long-pressed
-        self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(78), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
+        self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(108), y: Int(screenSize.height) - Int(75), width: 40, height: 40)
         self.cameraRightButton.backgroundColor = Colours.clear
         self.cameraRightButton.layer.cornerRadius = CGFloat(32)
         self.cameraRightButton.alpha = 1
