@@ -322,7 +322,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.collectionView = UICollectionView(frame: CGRect(x: 0, y: Int(screenSize.height), width: Int(screenSize.width), height: 120), collectionViewLayout: layout)
         self.collectionView.contentSize = CGSize(width: screenSize.width * 5, height: 120)
         self.collectionView.isScrollEnabled = true
-        self.collectionView.backgroundColor = Colours.clear
+        self.collectionView.backgroundColor = Colours.purple
         self.collectionView.showsHorizontalScrollIndicator = false
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.delegate = self
