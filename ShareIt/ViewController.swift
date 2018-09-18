@@ -614,7 +614,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         var minVector = SCNVector3Zero
         var maxVector = SCNVector3Zero
         (minVector, maxVector) = textNode.boundingBox
-        textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, minVector.z + (maxVector.z - minVector.z)/2)
+        textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, 3)
         return textNode
     }
     
