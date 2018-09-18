@@ -87,7 +87,21 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         for items in models! {
             if items.id == selectedAnnotation?.subtitle {
                 
+                let gotoButton = UIButton()
+                gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 50, width: self.view.bounds.width, height: 50)
+                gotoButton.backgroundColor = Colours.appTintColour
+                gotoButton.setTitle("Place object in View", for: .normal)
+                gotoButton.titleLabel?.textAlignment = .center
+                gotoButton.titleLabel?.textColor = UIColor.white
+                gotoButton.addTarget(self, action: #selector(tappedGoTo), for: .touchDown)
+                self.view.addSubview(gotoButton)
+                
             }
         }
+    }
+    
+    @objc func tappedGoTo() {
+        print("tapped go to")
+        self.dismiss(animated: true, completion: nil)
     }
 }
