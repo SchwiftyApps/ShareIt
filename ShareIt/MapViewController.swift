@@ -71,7 +71,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     let lattitude = items.lattitude
                     // Place a new pin at the location derived from the server
                     let customPin = MKPointAnnotation()
-                    customPin.coordinate = CLLocation(latitude: lattitude ?? 0, longitude: longitude ?? 0).coordinate
+                    customPin.coordinate = CLLocation(latitude: lattitude, longitude: longitude).coordinate
                     customPin.title = items.text
                     customPin.subtitle = "This item has the ID: \(String(describing: ID))"
                     self.mapView.addAnnotation(customPin)

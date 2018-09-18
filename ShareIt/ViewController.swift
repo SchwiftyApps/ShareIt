@@ -132,7 +132,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 let text = data?.text
                 let longitude = data?.longitude
                 let lattitude = data?.lattitude
-                let id = data?.id
                 
                 let longRound = Double(round(1000*(longitude ?? 1))/1000)
                 let latRound = Double(round(1000*(lattitude ?? 1))/1000)
@@ -147,10 +146,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.sceneView.scene.rootNode.addChildNode(textNode)
                 }
             }
-            
-//            client.get("/sample") { (data: [Model]?, error: Error?) in
-//                
-//            }
         }
     }
     
@@ -411,9 +406,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.id = "1"
         
         // Uncomment below to send random ID
-        //let idToSend = arc4random_uniform(500) + 1
+        let idToSend = arc4random_uniform(500) + 1
         // Uncomment below to send test ID of 1
-        let idToSend = "1"
+//        let idToSend = "1"
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
