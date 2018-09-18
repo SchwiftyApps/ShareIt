@@ -173,9 +173,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
         // Configure camera long-hold gesture for extra actions
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPressGestureRecognizer.minimumPressDuration = 0.4
-        self.cameraButton.addGestureRecognizer(longPressGestureRecognizer)
+        //let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        //longPressGestureRecognizer.minimumPressDuration = 0.4
+        //self.cameraButton.addGestureRecognizer(longPressGestureRecognizer)
     }
     
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
@@ -192,7 +192,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 self.mapButton.alpha = 0
                 self.overlayView.alpha = 1
                 self.upIndicator.alpha = 0
-                self.mapButton.alpha = 0
             })
         }
     }
@@ -230,6 +229,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                     self.overlayView.alpha = 1
                     self.upIndicator.alpha = 0
                     self.mapButton.alpha = 0
+                    self.cameraLeftButton.alpha = 0
+                    self.cameraRightButton.alpha = 0
                 })
             } else {
                 // Close drawer
@@ -251,7 +252,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func createMapButton() {
         // Create the map button and add it to the view
-        self.mapButton.frame = CGRect(x: Int(screenSize.width/4)*3 - Int(20), y: Int(screenSize.height) - Int(125), width: 50, height: 50)
+        self.mapButton.frame = CGRect(x: Int(screenSize.width/4)*3 - Int(20), y: Int(screenSize.height) - Int(205), width: 50, height: 50)
         self.mapButton.backgroundColor = Colours.appTintColour
         self.mapButton.layer.cornerRadius = CGFloat(50/2)
         self.mapButton.addTarget(self, action: #selector(self.tappedMapButton), for: .touchUpInside)
@@ -274,7 +275,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
-        self.cameraLeftButton.alpha = 0
+        self.cameraLeftButton.alpha = 1
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
         
         self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
@@ -284,7 +285,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.cameraRightButton.frame = CGRect(x: Int(screenSize.width/2) + Int(78), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
         self.cameraRightButton.backgroundColor = Colours.clear
         self.cameraRightButton.layer.cornerRadius = CGFloat(32)
-        self.cameraRightButton.alpha = 0
+        self.cameraRightButton.alpha = 1
         self.cameraRightButton.addTarget(self, action: #selector(self.tappedCameraRightButton), for: .touchUpInside)
         self.cameraRightButton.setImage(UIImage(named: "right"), for: .normal)
         self.sceneView.addSubview(self.cameraRightButton)
@@ -375,8 +376,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
             self.cameraButton.transform = CGAffineTransform(scaleX: 1, y: 1)
             self.cameraBackground.alpha = 0
-            self.cameraLeftButton.alpha = 0
-            self.cameraRightButton.alpha = 0
+            self.cameraLeftButton.alpha = 1
+            self.cameraRightButton.alpha = 1
             self.mapButton.alpha = 1
             self.mapButton.alpha = 1
         })
@@ -397,7 +398,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 //        })
         
         // Display alert showing that the AR objects have been deleted
-        self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
+        self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(200))
     }
     
     @objc func tappedCameraRightButton(button: UIButton) {
@@ -441,7 +442,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Display alert showing success once the AR objects have been uploaded
         
-        self.createAlertBanner(text: "Successfully uploaded to server", width: 300, yPos: Int(screenSize.height) - Int(195))
+        self.createAlertBanner(text: "Successfully uploaded to server", width: 300, yPos: Int(screenSize.height) - Int(200))
     }
     
     func createAlertBanner(text: String, width: CGFloat, yPos: Int) {
@@ -457,10 +458,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.view.addSubview(banner)
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.mapButton.alpha = 0
             banner.alpha = 1
         })
         
         UIView.animate(withDuration: 0.5, delay: 2, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.mapButton.alpha = 1
             banner.alpha = 0
         })
     }
@@ -521,6 +524,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.backgroundColor = Colours.offWhite
             self.cameraButton.layer.borderColor = Colours.white.cgColor
             self.mapButton.alpha = 1
+            self.cameraLeftButton.alpha = 1
+            self.cameraRightButton.alpha = 1
         })
         
         self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
