@@ -18,6 +18,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var backButton = UIButton()
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
     var models: [Model]?
+    var customToSend = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,9 +87,9 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         var selectedAnnotation = view.annotation as? MKPointAnnotation
         for items in models! {
             if items.id == selectedAnnotation?.subtitle {
-                
+                self.customToSend = selectedAnnotation?.title ?? "Hello"
                 let gotoButton = UIButton()
-                gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 50, width: self.view.bounds.width, height: 50)
+                gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
                 gotoButton.backgroundColor = Colours.appTintColour
                 gotoButton.setTitle("Place object in View", for: .normal)
                 gotoButton.titleLabel?.textAlignment = .center
@@ -101,7 +102,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     @objc func tappedGoTo() {
-        print("tapped go to")
         self.dismiss(animated: true, completion: nil)
+        let dictToSend = ["object": self.customToSend]
+        NotificationCenter.default.post(name: Notification.Name("sendData"), object: dictToSend)
     }
 }

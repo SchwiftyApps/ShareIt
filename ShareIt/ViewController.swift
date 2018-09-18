@@ -62,8 +62,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
     }
     
+    @objc func receivedData(notification: NSNotification) {
+        if let text = notification.userInfo?["object"] as? String {
+            self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+                node.removeFromParentNode()
+            }
+            
+            // Add selected text to the AR view
+            var textNode = SCNNode()
+            textNode = self.createGreetingTextNode(string: text)
+            textNode.position.z = -1
+            self.sceneView.scene.rootNode.addChildNode(textNode)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(receivedData), name: Notification.Name("sendData"), object: nil)
         
         // Set up the scene view's frame
         sceneView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
