@@ -339,6 +339,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Create the cells for the collectionView and populate it with data from the array
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TextCell
+        cell.backgroundColor = Colours.appTintColour
         cell.text.setTitle(self.textArray[indexPath.row], for: .normal)
         cell.text.setTitleColor(Colours.white, for: .normal)
         cell.text.backgroundColor = Colours.purpleLight

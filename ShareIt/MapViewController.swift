@@ -67,6 +67,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //self.mapView.addAnnotation(customPin)
         if let client = client {
             client.get("/sample") { (data: [Model]?, error: Error?) in
+                
                 self.models = data
                 for items in data! {
                     let ID = items.id
@@ -84,7 +85,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        var selectedAnnotation = view.annotation as? MKPointAnnotation
+        let selectedAnnotation = view.annotation as? MKPointAnnotation
         for items in models! {
             if items.id == selectedAnnotation?.subtitle {
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
