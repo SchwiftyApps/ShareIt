@@ -415,10 +415,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Uncomment below to send test ID of 1
         //let idToSend = "1"
         
-        self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
-            node.removeFromParentNode()
-        }
-        
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
         // Send off AR-related model to the server
@@ -515,6 +511,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.cameraButton.layer.borderColor = Colours.white.cgColor
             self.mapButton.alpha = 1
         })
+        
+        self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
         
         // Add selected text to the AR view
         var textNode = SCNNode()
