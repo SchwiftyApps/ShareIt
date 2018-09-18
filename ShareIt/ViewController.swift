@@ -40,7 +40,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     let feedback = UISelectionFeedbackGenerator()
     let feedbackImpact = UIImpactFeedbackGenerator()
     let feedbackSuccess = UINotificationFeedbackGenerator()
-    var textArray: [String] = ["Kitura", "Swift", "Hello", "ARKit", "IBM", "Web", "Server", "3D", "Open", "Source", "Cloud"]
+    var textArray: [String] = ["Kitura", "Swift", "Hello", "ARKit", "IBM", "Web", "Server", "3D", "Open", "Source", "Cloud", "Plane"]
     
     public struct screenSize {
         static var width: CGFloat = UIViewController().view.bounds.width
@@ -68,11 +68,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 node.removeFromParentNode()
             }
             
+            if text.contains("--model") {
+                
+                let scene = SCNScene(named: "art.scnassets/ship.scn")!
+                sceneView.scene = scene
+            } else {
+            
             // Add selected text to the AR view
             var textNode = SCNNode()
             textNode = self.createGreetingTextNode(string: text)
             textNode.position.z = -1
             self.sceneView.scene.rootNode.addChildNode(textNode)
+                
+            }
         }
     }
     
@@ -434,6 +442,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let idToSend = arc4random_uniform(500) + 1
         // Uncomment below to send test ID of 1
         
+        
+        if self.textTapped == "Plane" {
+            self.textTapped = "--model\(self.textTapped)"
+        }
+        
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
         // Send off AR-related model to the server
@@ -519,6 +532,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Haptic feedback
         feedbackImpact.impactOccurred()
         
+        
+        if button.titleLabel?.text ?? "Hello" == "Plane" {
+            
+            let scene = SCNScene(named: "art.scnassets/ship.scn")!
+            sceneView.scene = scene
+            
+        } else {
         // Store text from the tapped button
         textTapped = button.titleLabel?.text ?? "Hello"
         
@@ -544,6 +564,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         textNode = self.createGreetingTextNode(string: textTapped)
         textNode.position.z = -1
         self.sceneView.scene.rootNode.addChildNode(textNode)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

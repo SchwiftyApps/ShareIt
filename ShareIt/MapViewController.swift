@@ -69,6 +69,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //customPin.subtitle = "Test Subtitle"
         //self.mapView.addAnnotation(customPin)
         if let client = client {
+            
             client.get("/sample") { (data: [Model]?, error: Error?) in
                 guard let models = data else {
                     if let err = error {
@@ -105,6 +106,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         let selectedAnnotation = view.annotation as? MKPointAnnotation
         for items in models {
             if items.id == selectedAnnotation?.subtitle {
+                
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
                 self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
                 self.gotoButton.backgroundColor = Colours.appTintColour
@@ -126,7 +128,17 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     @objc func tappedGoTo() {
         self.dismiss(animated: true, completion: nil)
+        
+        
+        
+        if self.customToSend == "--modelPlane" {
+            let dictToSend = ["object": "--model\(self.customToSend)"]
+            NotificationCenter.default.post(name: Notification.Name("sendData"), object: nil, userInfo: dictToSend)
+        } else {
+        
         let dictToSend = ["object": self.customToSend]
         NotificationCenter.default.post(name: Notification.Name("sendData"), object: nil, userInfo: dictToSend)
+            
+        }
     }
 }
