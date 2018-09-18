@@ -411,9 +411,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // self.model?.id = "1"
         
         // Uncomment below to send random ID
-        //let idToSend = arc4random_uniform(500) + 1
+        let idToSend = arc4random_uniform(500) + 1
         // Uncomment below to send test ID of 1
-        let idToSend = "1"
+        //let idToSend = "1"
+        
+        self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)
         
