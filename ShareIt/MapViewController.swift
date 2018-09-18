@@ -104,6 +104,6 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @objc func tappedGoTo() {
         self.dismiss(animated: true, completion: nil)
         let dictToSend = ["object": self.customToSend]
-        NotificationCenter.default.post(name: Notification.Name("sendData"), object: dictToSend)
+        NotificationCenter.default.post(name: Notification.Name("sendData"), object: nil, userInfo: dictToSend)
     }
 }
