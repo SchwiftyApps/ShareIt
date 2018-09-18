@@ -19,6 +19,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var sceneView = ARSCNView()
     var directionLight = SCNLight()
     
+    var textNode = SCNNode()
     var textTapped = ""
     var model: Model?
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
@@ -141,7 +142,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
+        
+        sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
+
     }
+    
+    @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
+        
+        gesture.minimumNumberOfTouches = 1
+        
+        let results = self.sceneView.hitTest(gesture.location(in: gesture.view), types: ARHitTestResult.ResultType.featurePoint)
+        guard let result: ARHitTestResult = results.first else {
+            return
+        }
+        
+        let position = SCNVector3Make(result.worldTransform.columns.3.x, result.worldTransform.columns.3.y, result.worldTransform.columns.3.z)
+        textNode.position = position
+    }
+
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
@@ -627,6 +645,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     }
     
     func createGreetingTextNode(string: String) -> SCNNode {
+        
         // Create a 3D text model based on a passed in String
         let text = SCNText(string: string, extrusionDepth: 0.17)
         // Font size is in scene units (meters)
@@ -638,8 +657,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         text.firstMaterial?.diffuse.contents = Colours.white
         
         // Add the model to the scene
+        textNode = SCNNode(geometry: text)
         // TO DO: Add pinch gesture and adjust scale value to scale text before dropping in the view
-        let textNode = SCNNode(geometry: text)
+        
         let fontSize = Float(0.4)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
         
