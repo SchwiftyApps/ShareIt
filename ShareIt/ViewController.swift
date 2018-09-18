@@ -272,12 +272,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraBackground)
         
         // Create camera left button for when the camera button is long-pressed
-        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 40, height: 40)
+        self.cameraLeftButton.frame = CGRect(x: Int(screenSize.width/2) - Int(120), y: Int(screenSize.height) - Int(75) - 44, width: 43, height: 43)
         self.cameraLeftButton.backgroundColor = Colours.clear
         self.cameraLeftButton.layer.cornerRadius = CGFloat(32)
         self.cameraLeftButton.alpha = 1
         self.cameraLeftButton.addTarget(self, action: #selector(self.tappedCameraLeftButton), for: .touchUpInside)
-        self.cameraLeftButton.setImage(UIImage(named: "left"), for: .normal)
+        self.cameraLeftButton.setImage(UIImage(named: "cross"), for: .normal)
         self.cameraLeftButton.layer.shadowColor = UIColor.black.cgColor
         self.cameraLeftButton.layer.shadowOpacity = 0.4
         self.cameraLeftButton.layer.shadowOffset = CGSize(width: 0, height: 3)

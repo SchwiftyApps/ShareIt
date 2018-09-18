@@ -23,9 +23,10 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = Colours.appTintColour
         
-        self.mapView = MKMapView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
+        self.mapView = MKMapView(frame: CGRect(x: 20, y: 80, width: self.view.bounds.width - 40, height: self.view.bounds.height - 110))
+        self.mapView.layer.cornerRadius = 20
         self.mapView.delegate = self
         self.view.addSubview(self.mapView)
         
