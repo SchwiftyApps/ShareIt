@@ -69,7 +69,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 node.removeFromParentNode()
             }
             
-            if text.contains("--model") {
+            if text.contains("Plane") {
                 
                 let scene = SCNScene(named: "art.scnassets/ship.scn")!
                 sceneView.scene = scene
@@ -464,7 +464,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         
         if self.textTapped == "Plane" {
-            self.textTapped = "--model\(self.textTapped)"
+            self.textTapped = "\(self.textTapped)"
         }
         
         let model = Model(id: "\(idToSend)", text: self.textTapped, lattitude: self.lat, longitude: self.long)

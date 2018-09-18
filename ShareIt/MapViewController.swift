@@ -131,8 +131,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         
         
-        if self.customToSend == "--modelPlane" {
-            let dictToSend = ["object": "--model\(self.customToSend)"]
+        if self.customToSend == "Plane" {
+            let dictToSend = ["object": "\(self.customToSend)"]
             NotificationCenter.default.post(name: Notification.Name("sendData"), object: nil, userInfo: dictToSend)
         } else {
         
