@@ -151,15 +151,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         gesture.minimumNumberOfTouches = 1
         
-        let results = self.sceneView.hitTest(gesture.location(in: gesture.view), types: ARHitTestResult.ResultType.featurePoint)
-        guard let result: ARHitTestResult = results.first else {
-            return
-        }
+//        let results = self.sceneView.hitTest(gesture.location(in: gesture.view), types: ARHitTestResult.ResultType.featurePoint)
+//        guard let result: ARHitTestResult = results.first else {
+//            return
+//        }
         
-        let locationNew = SCNVector3(x: Float(result.worldTransform.columns.3.x), y: Float(result.worldTransform.columns.3.y), z: Float(sceneView.projectPoint(SCNVector3Zero).z))
-
-        let position = locationNew
-        textNode.position = position
+        //let locationNew = SCNVector3(x: Float(result.worldTransform.columns.3.x), y: Float(result.worldTransform.columns.3.y), z: Float(sceneView.projectPoint(SCNVector3Zero).z))
+        
+        let results = sceneView.hitTest(CGPoint(x:view.bounds.width/2,y:view.bounds.height/2), types: [ARHitTestResult.ResultType.featurePoint])
+        guard let hitFeature = results.last else { return }
+        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
+        let hitPosition = SCNVector3Make(hitTransform.m41,
+                                         hitTransform.m42,
+                                         hitTransform.m43)
+        
+        // Place the ARkit object into the scene
+        textNode.position = hitPosition
     }
 
     
