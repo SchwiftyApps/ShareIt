@@ -92,7 +92,6 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        self.gotoButton.removeFromSuperview()
         
         self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
