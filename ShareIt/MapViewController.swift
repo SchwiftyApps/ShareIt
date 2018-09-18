@@ -17,7 +17,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var locationManager = CLLocationManager()
     var backButton = UIButton()
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
-    var models: [Model]?
+    var models: [Model] = []
     var customToSend = ""
     
     override func viewDidLoad() {
@@ -68,9 +68,14 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //self.mapView.addAnnotation(customPin)
         if let client = client {
             client.get("/sample") { (data: [Model]?, error: Error?) in
-                
-                self.models = data
-                for items in data! {
+                guard let models = data else {
+                    if let err = error {
+                        print("\(err)")
+                    }
+                    return
+                }
+                self.models = models
+                for items in models {
                     let ID = items.id
                     let longitude = items.longitude
                     let lattitude = items.lattitude
@@ -87,7 +92,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let selectedAnnotation = view.annotation as? MKPointAnnotation
-        for items in models! {
+        for items in models {
             if items.id == selectedAnnotation?.subtitle {
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
                 let gotoButton = UIButton()
