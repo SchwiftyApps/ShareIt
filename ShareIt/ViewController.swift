@@ -391,9 +391,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             node.removeFromParentNode()
         }
         
-        client?.delete("/sample", identifier: "1", respondWith: { (error: Error?) in
-            print("Deleted item from the server")
-        })
+//        client?.delete("/sample", identifier: "1", respondWith: { (error: Error?) in
+//            print("Deleted item from the server")
+//        })
         
         // Display alert showing that the AR objects have been deleted
         self.createAlertBanner(text: "Removed all ARKit text objects", width: 300, yPos: Int(screenSize.height) - Int(195))
@@ -494,7 +494,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         // Save the image to the user's camera roll
         let image = sceneView.snapshot()
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+//        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         
         // Offer share sheet to share the image
         let shareContent = ["Hey! Check out this cool AR experience 👾", image] as [Any]
