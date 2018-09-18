@@ -21,7 +21,7 @@ class Plane: SCNNode {
         self.planeGeometry = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
         let material = SCNMaterial()
         self.planeGeometry.materials = [material]
-        self.planeGeometry.firstMaterial?.transparency = 0.5
+        self.planeGeometry.firstMaterial?.transparency = 0
         self.planeNode = SCNNode(geometry: planeGeometry)
         self.planeNode.transform = SCNMatrix4MakeRotation(-Float.pi / 2.0, 1, 0, 0)
         
