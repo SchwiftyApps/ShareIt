@@ -17,6 +17,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var locationManager = CLLocationManager()
     var backButton = UIButton()
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
+    var models: [Model]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +66,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         if let client = client {
             client.get("/sample") { (data: [Model]?, error: Error?) in
+                self.models = data
                 for items in data! {
                     let ID = items.id
                     let longitude = items.longitude
@@ -73,15 +75,25 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     let customPin = MKPointAnnotation()
                     customPin.coordinate = CLLocation(latitude: lattitude, longitude: longitude).coordinate
                     customPin.title = items.text
-                    customPin.subtitle = "This item has the ID: \(String(describing: ID))"
+                    customPin.subtitle = ID
                     self.mapView.addAnnotation(customPin)
                 }
             }
         }
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("did select pin")
-        print(view.annotation?.title ?? "title")
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        var selectedAnnotation = view.annotation as? MKPointAnnotation
+        for items in models {
+            if items.id == selectedAnnotation?.subtitle {
+                print("ID in here")
+                print(selectedAnnotation?.title)
+            }
+        }
+    }
+
+    func info(sender: UIButton) {
+        print("selected pin")
+        print(selectedAnnotation?.coordinate)
     }
 }
