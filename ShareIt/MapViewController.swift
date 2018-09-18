@@ -19,6 +19,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
     var models: [Model] = []
     var customToSend = ""
+    let gotoButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,19 +91,34 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
     
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        self.gotoButton.removeFromSuperview()
+        
+        self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            self.gotoButton.alpha = 0
+            self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
+        })
+    }
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let selectedAnnotation = view.annotation as? MKPointAnnotation
         for items in models {
             if items.id == selectedAnnotation?.subtitle {
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
-                let gotoButton = UIButton()
-                gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
-                gotoButton.backgroundColor = Colours.appTintColour
-                gotoButton.setTitle("Place object in View", for: .normal)
-                gotoButton.titleLabel?.textAlignment = .center
-                gotoButton.titleLabel?.textColor = UIColor.white
-                gotoButton.addTarget(self, action: #selector(tappedGoTo), for: .touchDown)
-                self.view.addSubview(gotoButton)
+                self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
+                self.gotoButton.backgroundColor = Colours.appTintColour
+                self.gotoButton.setTitle("Place object in View", for: .normal)
+                self.gotoButton.titleLabel?.textAlignment = .center
+                self.gotoButton.titleLabel?.textColor = UIColor.white
+                self.gotoButton.addTarget(self, action: #selector(tappedGoTo), for: .touchDown)
+                self.gotoButton.alpha = 0
+                self.view.addSubview(self.gotoButton)
+                
+                UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+                    self.gotoButton.alpha = 1
+                    self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
+                })
                 
             }
         }
