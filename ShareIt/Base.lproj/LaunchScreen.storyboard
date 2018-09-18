@@ -22,14 +22,25 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ShareIt" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nTy-z6-U1B">
-                                        <rect key="frame" x="131" y="314.5" width="113.5" height="38.5"/>
+                                        <rect key="frame" x="131" y="313" width="113.5" height="41"/>
                                         <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
+                                        <color key="shadowColor" red="0.20179647840000001" green="0.20179647840000001" blue="0.20179647840000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <size key="shadowOffset" width="0.0" height="2.3999999999999999"/>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon2" translatesAutoresizingMaskIntoConstraints="NO" id="ZUC-c8-5S2">
+                                        <rect key="frame" x="127.5" y="173" width="120" height="120"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="120" id="0Mb-hm-VRi"/>
+                                            <constraint firstAttribute="height" constant="120" id="k86-iO-yTp"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.30588235294117649" green="0.72549019607843135" blue="0.88235294117647056" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
+                                    <constraint firstItem="nTy-z6-U1B" firstAttribute="top" secondItem="ZUC-c8-5S2" secondAttribute="bottom" constant="20" id="Ulc-11-b5j"/>
+                                    <constraint firstItem="ZUC-c8-5S2" firstAttribute="centerX" secondItem="oDk-7b-4dA" secondAttribute="centerX" id="gdE-xi-cB1"/>
                                     <constraint firstItem="nTy-z6-U1B" firstAttribute="centerX" secondItem="oDk-7b-4dA" secondAttribute="centerX" id="nRi-Dc-WcH"/>
                                     <constraint firstItem="nTy-z6-U1B" firstAttribute="centerY" secondItem="oDk-7b-4dA" secondAttribute="centerY" id="p0t-bY-aKb"/>
                                 </constraints>
@@ -50,4 +61,7 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Icon2" width="1024" height="1024"/>
+    </resources>
 </document>
