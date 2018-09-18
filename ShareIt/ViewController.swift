@@ -535,6 +535,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         if button.titleLabel?.text ?? "Hello" == "Plane" {
             
+            // Store text from the tapped button
+            textTapped = button.titleLabel?.text ?? "Hello"
             let scene = SCNScene(named: "art.scnassets/ship.scn")!
             sceneView.scene = scene
             
