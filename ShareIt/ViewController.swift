@@ -255,7 +255,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.mapButton.backgroundColor = Colours.appTintColour
         self.mapButton.layer.cornerRadius = CGFloat(50/2)
         self.mapButton.addTarget(self, action: #selector(self.tappedMapButton), for: .touchUpInside)
-        self.mapButton.setImage(UIImage(named: "left"), for: .normal)
+        self.mapButton.setImage(UIImage(named: "map"), for: .normal)
         self.mapButton.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         self.sceneView.addSubview(self.mapButton)
     }

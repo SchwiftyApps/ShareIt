@@ -40,6 +40,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.distanceFilter = 50
         self.locationManager.startUpdatingLocation()
         
