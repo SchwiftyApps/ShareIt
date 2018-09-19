@@ -144,8 +144,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
-
         sceneView.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:))))
+        
+        
     }
     
     var latestTranslatePos: CGPoint?
@@ -153,11 +154,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     @objc func rotateNode(_ gesture: UIRotationGestureRecognizer) {
         let rotation = Float(gesture.rotation)
-        
         if gesture.state == .changed {
             self.textNode.eulerAngles.y = -(currentAngleY + rotation)
         }
-        
         if (gesture.state == .ended) {
             currentAngleY = self.textNode.eulerAngles.y
         }
@@ -219,7 +218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func configureGestures() {
         // Configure pan gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.minimumNumberOfTouches = 3
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
@@ -702,7 +701,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let currentPositionOfCamera = location
         
         (minVector, maxVector) = textNode.boundingBox
-        textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, 3)
+        
+        let bound = SCNVector3(x: maxVector.x - minVector.x,
+                               y: maxVector.y - minVector.y,
+                               z: maxVector.z - minVector.z)
+        textNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2,
+                                                   bound.y / 2,
+                                                   bound.z / 2)
         textNode.position = currentPositionOfCamera
         return textNode
     }
