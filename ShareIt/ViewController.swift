@@ -596,7 +596,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Offer share sheet to share the image
         let shareContent = ["Hey! Check out this cool AR experience 👾", image] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareContent, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.popoverPresentationController?.sourceView = self.cameraButton
         
         self.present(activityViewController, animated: true, completion: nil)
     }
