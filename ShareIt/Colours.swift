@@ -16,6 +16,7 @@ struct Colours {
     static var clear = UIColor.clear
     static var red = UIColor(red: 250/255, green: 10/255, blue: 10/255, alpha: 1)
     static var purpleLight = UIColor(red: 71/255, green: 131/255, blue: 213/255, alpha: 1)
+    static var purpleLightest = UIColor(red: 61/255, green: 121/255, blue: 203/255, alpha: 1)
     static var purple = UIColor(red: 91/255, green: 151/255, blue: 233/255, alpha: 1)
     static var offWhite = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)
     

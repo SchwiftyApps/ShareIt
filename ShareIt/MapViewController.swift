@@ -23,7 +23,12 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = Colours.appTintColour
+        //self.view.backgroundColor = Colours.appTintColour
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [Colours.appTintColour.cgColor, Colours.purpleLightest.cgColor]
+        self.view.layer.addSublayer(gradientLayer)
         
         self.mapView = MKMapView(frame: CGRect(x: 20, y: 80, width: self.view.bounds.width - 40, height: self.view.bounds.height - 110))
         self.mapView.layer.cornerRadius = 20
