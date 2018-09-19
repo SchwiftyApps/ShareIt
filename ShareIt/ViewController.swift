@@ -35,7 +35,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     var cameraRightButton = UIButton()
     var drawerView = UIView()
     var overlayView = UIButton()
-    var upIndicator = UIImageView()
+    var upIndicator = UIButton()
     var collectionView: UICollectionView!
     
     let feedback = UISelectionFeedbackGenerator()
@@ -145,7 +145,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
         sceneView.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:))))
-        
         
     }
     
@@ -357,11 +356,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         self.sceneView.addSubview(self.cameraButton)
         
         // Create the swipe up prompt indicator
-        self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(20), y: Int(screenSize.height) - Int(60), width: 40, height: 37)
+        self.upIndicator.frame = CGRect(x: Int(screenSize.width/2) - Int(30), y: Int(screenSize.height) - Int(60), width: 60, height: 37)
         self.upIndicator.backgroundColor = Colours.clear
         self.upIndicator.alpha = 0.65
-        self.upIndicator.image = UIImage(named: "upArrow")
+        self.upIndicator.setImage(UIImage(named: "upArrow"), for: .normal)
+        self.upIndicator.imageEdgeInsets = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        self.upIndicator.addTarget(self, action: #selector(self.tappedUp), for: .touchUpInside)
         self.sceneView.addSubview(self.upIndicator)
+    }
+    
+    @objc func tappedUp() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
+            
+            self.drawerView.frame.origin.y = CGFloat(screenSize.height)
+            self.collectionView.frame.origin.y = CGFloat(screenSize.height - 120)
+            self.cameraButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+            self.cameraButton.backgroundColor = Colours.purple.withAlphaComponent(0.5)
+            self.cameraButton.layer.borderColor = Colours.white.withAlphaComponent(0.3).cgColor
+            self.overlayView.alpha = 1
+            self.upIndicator.alpha = 0
+            self.mapButton.alpha = 0
+            self.cameraLeftButton.alpha = 0
+            self.cameraRightButton.alpha = 0
+        })
     }
     
     func createDrawer() {
@@ -684,7 +701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         textNode = SCNNode(geometry: text)
         // TO DO: Add pinch gesture and adjust scale value to scale text before dropping in the view
         
-        let fontSize = Float(0.4)
+        let fontSize = Float(0.2)
         textNode.scale = SCNVector3(fontSize, fontSize, fontSize)
         
         // Allow the text node to cast a shadow
