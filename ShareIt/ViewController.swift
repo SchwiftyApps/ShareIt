@@ -145,9 +145,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
 
+        sceneView.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:))))
     }
     
     var latestTranslatePos: CGPoint?
+    var currentAngleY = Float(0.0)
+    
+    @objc func rotateNode(_ gesture: UIRotationGestureRecognizer) {
+        let rotation = Float(gesture.rotation)
+        
+        if gesture.state == .changed {
+            self.textNode.eulerAngles.y = -(currentAngleY + rotation)
+        }
+        
+        if (gesture.state == .ended) {
+            currentAngleY = self.textNode.eulerAngles.y
+        }
+    }
     
     @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
         
