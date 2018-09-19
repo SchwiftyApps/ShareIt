@@ -145,11 +145,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         
         sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
         sceneView.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:))))
+        sceneView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(scaleObject(_:))))
         
     }
     
     var latestTranslatePos: CGPoint?
     var currentAngleY = Float(0.0)
+    
+    @objc func scaleObject(_ gesture: UIPinchGestureRecognizer) {
+        if gesture.state == .changed {
+            
+            let pinchScaleX: CGFloat = gesture.scale * CGFloat((self.textNode.scale.x))
+            let pinchScaleY: CGFloat = gesture.scale * CGFloat((self.textNode.scale.y))
+            let pinchScaleZ: CGFloat = gesture.scale * CGFloat((self.textNode.scale.z))
+            self.textNode.scale = SCNVector3Make(Float(pinchScaleX), Float(pinchScaleY), Float(pinchScaleZ))
+            gesture.scale = 1
+            
+        }
+        if gesture.state == .ended { }
+    }
     
     @objc func rotateNode(_ gesture: UIRotationGestureRecognizer) {
         let rotation = Float(gesture.rotation)
