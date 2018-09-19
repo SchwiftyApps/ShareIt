@@ -16,6 +16,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var mapView = MKMapView()
     var locationManager = CLLocationManager()
     var backButton = UIButton()
+    var typeButton = UIButton()
+    var currentMapStandard = true
     let client = KituraKit(baseURL: "http://159.122.181.186:31651")
     var models: [Model] = []
     var customToSend = ""
@@ -33,6 +35,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.mapView = MKMapView(frame: CGRect(x: 20, y: 80, width: self.view.bounds.width - 40, height: self.view.bounds.height - 110))
         self.mapView.layer.cornerRadius = 20
         self.mapView.delegate = self
+        self.mapView.mapType = .standard
         self.view.addSubview(self.mapView)
         
         self.backButton.frame = CGRect(x: 20, y: 20, width: 40, height: 40)
@@ -42,6 +45,14 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.backButton.setImage(UIImage(named: "cross"), for: .normal)
         self.backButton.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         self.view.addSubview(self.backButton)
+        
+        self.typeButton.frame = CGRect(x: self.view.bounds.width - 60, y: 20, width: 40, height: 40)
+        self.typeButton.backgroundColor = Colours.purple
+        self.typeButton.layer.cornerRadius = CGFloat(20)
+        self.typeButton.addTarget(self, action: #selector(self.changeMap), for: .touchUpInside)
+        self.typeButton.setImage(UIImage(named: "left"), for: .normal)
+        self.typeButton.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        self.view.addSubview(self.typeButton)
         
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
@@ -63,6 +74,16 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     @objc func goBack() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func changeMap() {
+        if currentMapStandard {
+            self.mapView.mapType = .hybrid
+            self.currentMapStandard = false
+        } else {
+            self.mapView.mapType = .standard
+            self.currentMapStandard = true
+        }
     }
     
     func fetchServerLocations() {
