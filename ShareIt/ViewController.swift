@@ -163,7 +163,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         } else {
             let deltaX = Float(position.x - latestTranslatePos!.x)/600
             let deltaY = Float(position.y - latestTranslatePos!.y)/600
-            self.textNode.localTranslate(by: SCNVector3Make(deltaX, 0.0, deltaY))
+            self.textNode.localTranslate(by: SCNVector3Make(deltaX, -deltaY, 0))
             latestTranslatePos = position
             if (state == .ended) {
                 
