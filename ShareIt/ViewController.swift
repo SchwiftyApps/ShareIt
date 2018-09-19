@@ -165,7 +165,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let pos = SCNVector3Make(pos0.x/length, pos0.y/length, pos0.z/length)
 
         let position = locationNew
-        textNode.position = position
+        textNode.position = pos
     }
 
     
