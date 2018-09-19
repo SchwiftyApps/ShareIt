@@ -143,7 +143,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             locationManager.startUpdatingLocation()
         }
         
-        //sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
+        sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
 
     }
     
@@ -157,6 +157,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         let locationNew = SCNVector3(x: Float(result.worldTransform.columns.3.x), y: Float(result.worldTransform.columns.3.y), z: Float(sceneView.projectPoint(SCNVector3Zero).z))
+        
+        let farPoint  = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 1))
+        let nearPoint = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 0))
+        let pos0 = SCNVector3Make(farPoint.x - nearPoint.x, farPoint.y - nearPoint.y, farPoint.z - nearPoint.z)
+        let length = sqrt(pos0.x*pos0.x + pos0.y*pos0.y + pos0.z*pos0.z)
+        let pos = SCNVector3Make(pos0.x/length, pos0.y/length, pos0.z/length)
 
         let position = locationNew
         textNode.position = position
@@ -196,7 +202,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func configureGestures() {
         // Configure pan gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        panGestureRecognizer.minimumNumberOfTouches = 1
+        panGestureRecognizer.minimumNumberOfTouches = 2
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
