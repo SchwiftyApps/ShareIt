@@ -671,8 +671,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         // Set a bounding box to the text model, and place it to the centre of the x and z axis, and to the bottom of the y axis to prevent it floating
         var minVector = SCNVector3Zero
         var maxVector = SCNVector3Zero
+        
+        let pointOfView = sceneView.pointOfView!
+        let transform = pointOfView.transform
+        let orientation = SCNVector3(-transform.m31, -transform.m32, transform.m33)
+        let location = SCNVector3(-transform.m31 + transform.m41, -transform.m32 + transform.m42, transform.m33 + transform.m43)
+        let currentPositionOfCamera = location
+        
         (minVector, maxVector) = textNode.boundingBox
         textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, 3)
+        textNode.position = currentPositionOfCamera
         return textNode
     }
     
