@@ -144,25 +144,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         }
         
         sceneView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
-
+        sceneView.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotateNode(_:))))
+        
+        
+    }
+    
+    var latestTranslatePos: CGPoint?
+    var currentAngleY = Float(0.0)
+    
+    @objc func rotateNode(_ gesture: UIRotationGestureRecognizer) {
+        let rotation = Float(gesture.rotation)
+        if gesture.state == .changed {
+            self.textNode.eulerAngles.y = -(currentAngleY + rotation)
+        }
+        if (gesture.state == .ended) {
+            currentAngleY = self.textNode.eulerAngles.y
+        }
     }
     
     @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
         
         gesture.minimumNumberOfTouches = 1
         
-        let results = self.sceneView.hitTest(gesture.location(in: gesture.view), types: ARHitTestResult.ResultType.featurePoint)
-        guard let result: ARHitTestResult = results.first else {
+        let position = gesture.location(in: sceneView)
+        let state = gesture.state
+        if (state == .failed || state == .cancelled) {
             return
         }
-        
-        let farPoint  = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 1))
-        let nearPoint = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 0))
-        let pos0 = SCNVector3Make(farPoint.x - nearPoint.x, farPoint.y - nearPoint.y, farPoint.z - nearPoint.z)
-        let length = sqrt(pos0.x*pos0.x + pos0.y*pos0.y + pos0.z*pos0.z)
-        let pos = SCNVector3Make(pos0.x/length, pos0.y/length, pos0.z/length)
-        
-        textNode.position = pos
+        if (state == .began) {
+            latestTranslatePos = position
+        } else {
+            let deltaX = Float(position.x - latestTranslatePos!.x)/600
+            let deltaY = Float(position.y - latestTranslatePos!.y)/600
+            self.textNode.localTranslate(by: SCNVector3Make(deltaX, -deltaY, 0))
+            latestTranslatePos = position
+            if (state == .ended) {
+                
+            }
+        }
     }
 
     
@@ -199,7 +218,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func configureGestures() {
         // Configure pan gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.minimumNumberOfTouches = 3
         panGestureRecognizer.delegate = self
         self.sceneView.addGestureRecognizer(panGestureRecognizer)
         
@@ -682,7 +701,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         let currentPositionOfCamera = location
         
         (minVector, maxVector) = textNode.boundingBox
-        textNode.pivot = SCNMatrix4MakeTranslation(minVector.x + (maxVector.x - minVector.x)/2, minVector.y, 3)
+        
+        let bound = SCNVector3(x: maxVector.x - minVector.x,
+                               y: maxVector.y - minVector.y,
+                               z: maxVector.z - minVector.z)
+        textNode.pivot = SCNMatrix4MakeTranslation(bound.x / 2,
+                                                   bound.y / 2,
+                                                   bound.z / 2)
         textNode.position = currentPositionOfCamera
         return textNode
     }
