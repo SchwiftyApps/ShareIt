@@ -100,10 +100,10 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         
-        self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
+        self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 90)
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
             self.gotoButton.alpha = 0
-            self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
+            self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 90)
         })
     }
     
@@ -113,8 +113,8 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             if items.id == selectedAnnotation?.subtitle {
                 
                 self.customToSend = selectedAnnotation?.title ?? "Hello"
-                self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 80)
-                self.gotoButton.backgroundColor = Colours.appTintColour
+                self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height, width: self.view.bounds.width, height: 90)
+                self.gotoButton.backgroundColor = Colours.black.withAlphaComponent(0.9)
                 self.gotoButton.setTitle("Tap to place object in View", for: .normal)
                 self.gotoButton.titleLabel?.textAlignment = .center
                 self.gotoButton.titleLabel?.textColor = UIColor.white
@@ -124,7 +124,7 @@ class mapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
                 UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 3, options: [.curveEaseOut], animations: {
                     self.gotoButton.alpha = 1
-                    self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 80)
+                    self.gotoButton.frame = CGRect(x: 0, y: self.view.bounds.height - 80, width: self.view.bounds.width, height: 90)
                 })
                 
             }
