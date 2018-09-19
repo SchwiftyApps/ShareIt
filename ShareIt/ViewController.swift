@@ -147,25 +147,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 
     }
     
+    var latestTranslatePos: CGPoint?
+    
     @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
         
         gesture.minimumNumberOfTouches = 1
         
-        let results = self.sceneView.hitTest(gesture.location(in: gesture.view), types: ARHitTestResult.ResultType.featurePoint)
-        guard let result: ARHitTestResult = results.first else {
+        let position = gesture.location(in: sceneView)
+        let state = gesture.state
+        if (state == .failed || state == .cancelled) {
             return
         }
-        
-        let locationNew = SCNVector3(x: Float(result.worldTransform.columns.3.x), y: Float(result.worldTransform.columns.3.y), z: Float(sceneView.projectPoint(SCNVector3Zero).z))
-        
-        let farPoint  = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 1))
-        let nearPoint = sceneView.unprojectPoint(SCNVector3(Float(gesture.location(in: self.view).x), Float(gesture.location(in: self.view).y), 0))
-        let pos0 = SCNVector3Make(farPoint.x - nearPoint.x, farPoint.y - nearPoint.y, farPoint.z - nearPoint.z)
-        let length = sqrt(pos0.x*pos0.x + pos0.y*pos0.y + pos0.z*pos0.z)
-        let pos = SCNVector3Make(pos0.x/length, pos0.y/length, pos0.z/length)
-
-        let position = locationNew
-        textNode.position = pos
+        if (state == .began) {
+            latestTranslatePos = position
+        } else {
+            let deltaX = Float(position.x - latestTranslatePos!.x)/600
+            let deltaY = Float(position.y - latestTranslatePos!.y)/600
+            self.textNode.localTranslate(by: SCNVector3Make(deltaX, 0.0, deltaY))
+            latestTranslatePos = position
+            if (state == .ended) {
+                
+            }
+        }
     }
 
     
