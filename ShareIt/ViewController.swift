@@ -628,6 +628,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             self.mapButton.alpha = 1
             self.cameraLeftButton.alpha = 1
             self.cameraRightButton.alpha = 1
+            self.upIndicator.alpha = 1
         })
         
         self.sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
